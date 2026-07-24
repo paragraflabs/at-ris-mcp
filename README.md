@@ -52,7 +52,7 @@ python -m ris_mcp
 | `ris_search_case` | Search Judikatur (default `Justiz`; all courts). Filter by applied `norm`. |
 | `ris_get_case_text` | Full text of a decision. |
 | `ris_list_collections` | Which endpoints/applications are covered. |
-| `ris_list_changes` | Change/early-warning feed — **v0.2 stub** (see roadmap). |
+| `ris_list_changes` | Change/early-warning feed (RIS History) via the OGD SOAP endpoint, incl. deleted documents. |
 
 ## Library usage
 
@@ -77,6 +77,7 @@ asyncio.run(main())
 | Variable | Default | Meaning |
 |---|---|---|
 | `RIS_BASE_URL` | `https://data.bka.gv.at/ris/api/v2.6` | API base (version isolation). |
+| `RIS_SOAP_URL` | `https://data.bka.gv.at/ris/ogd/v2.6/` | OGD SOAP endpoint (used by `ris_list_changes`). |
 | `RIS_USER_AGENT` | `at-ris-mcp/<version> (+…)` | Descriptive UA (netiquette). |
 | `RIS_RATE_MS` | `1200` | Minimum delay between requests (ms). |
 | `RIS_TIMEOUT_S` | `30` | HTTP timeout. |
@@ -104,12 +105,17 @@ announced to `ris.it@bka.gv.at`. A descriptive User-Agent is sent by default.
   Consolidated law and all other documents are for information only. Every
   response carries a `legal_notice` to that effect.
 
-## Scope (v0.1)
+## Scope (v0.2)
 
 Covered: `Bundesrecht` (`BrKons`, `BgblAuth`, `BgblPdf`, `BgblAlt`, `Begut`,
-`RegV`, `Erv`) and `Judikatur` (all courts). **Not yet covered:** Landesrecht,
-Sonstige, Bezirke, Gemeinden and the History change-feed — see the roadmap in
-`PLAN.md`.
+`RegV`, `Erv`), `Judikatur` (all courts) and the **History change-feed**
+(`ris_list_changes`, incl. deleted documents). **Not yet covered:** Landesrecht,
+Sonstige, Bezirke and Gemeinden — see the roadmap in `PLAN.md`.
+
+> **History note:** consolidated federal law is monitored under the application
+> name `Bundesnormen` (not `BrKons`), consolidated state law under
+> `Landesnormen`. The History query uses the OGD **SOAP** endpoint, since it is
+> not exposed via the REST GET API.
 
 ## Development
 

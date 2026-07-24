@@ -56,3 +56,18 @@ async def test_live_search_case_justiz_norm():
         )
     assert res.total > 0
     assert res.items[0].ecli.startswith("ECLI:AT:")
+
+
+@_skip
+async def test_live_list_changes_bundesnormen():
+    from ris_client import HistoryRequest
+
+    async with RisClient() as c:
+        res = await c.search_changes(
+            HistoryRequest(anwendung="Bundesnormen", von="2026-07-10",
+                           bis="2026-07-22", include_deleted=True,
+                           page_size="Ten")
+        )
+    assert res.total > 0
+    assert res.items
+    assert res.items[0].id

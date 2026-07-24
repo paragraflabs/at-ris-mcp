@@ -166,8 +166,8 @@
  
  ## 7. Roadmap
  
- - **v0.1 (MVP):** `ris_search_law` (BrKons + Abschnitt + Fassung), `ris_get_law_text` (Markdown), `ris_search_case` (Norm + Volltexte), `ris_get_case_text`, `ris_list_collections`. stdio. Caching + Rate-Limit + UA. Offline-Tests.
- - **v0.2:** `ris_list_changes` (History/ImRisSeit inkl. deleted), `Begut`/`RegV`-Applikationen, Audit-Log.
+ - **v0.1 (MVP):** `ris_search_law` (BrKons + Abschnitt + Fassung), `ris_get_law_text` (Markdown), `ris_search_case` (Norm + Volltexte), `ris_get_case_text`, `ris_list_collections`. stdio. Caching + Rate-Limit + UA. Offline-Tests. ✅ **erledigt**
+ - **v0.2:** `ris_list_changes` (History via OGD-SOAP inkl. `include_deleted`), `Begut`/`RegV`-Applikationen (einbringende_stelle, in_begutachtung_am, beschluss_von/bis), Audit-Log. ✅ **erledigt** — *Hinweis: History nutzt den SOAP-Endpoint `SearchDocuments` (query→Aenderungen); konsolidiertes Bundesrecht = `Bundesnormen`, nicht `BrKons`. Deleted-Flag ist heuristisch (Referenz ohne abrufbares Dokument), da das XSD keinen expliziten Lösch-Marker liefert.*
  - **v0.3:** Landesrecht (9 Bundesländer), `Sonstige` (Erlässe), `Bezirke`/`Gemeinden`.
  - **v1.0:** Härtung, Doku, PyPI + MCP-Registry-Eintrag (falls Veröffentlichung gewählt), `Erv` (engl. Übersetzungen).
  - **v2.0:** HTTP/SSE-Transport (Remote-Service fürs Business-Backend), optional strukturierte Norm-Graph-Ausgabe (Verweise zwischen §§).

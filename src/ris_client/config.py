@@ -11,9 +11,12 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 DEFAULT_BASE_URL = "https://data.bka.gv.at/ris/api/v2.6"
+# The OGD SOAP endpoint (used for the History/Änderungen query, which is not
+# available via the REST GET API). Derived from the same host + version.
+DEFAULT_SOAP_URL = "https://data.bka.gv.at/ris/ogd/v2.6/"
 # Hosts we are allowed to fetch full text from (PLAN.md §5 host restriction).
 ALLOWED_TEXT_HOSTS = ("www.ris.bka.gv.at", "ris.bka.gv.at", "data.bka.gv.at")
 
@@ -44,6 +47,7 @@ class Config:
     """Central client configuration; instantiated from the environment."""
 
     base_url: str = DEFAULT_BASE_URL
+    soap_url: str = DEFAULT_SOAP_URL
     user_agent: str = DEFAULT_USER_AGENT
     # Minimum delay between outgoing HTTP requests (netiquette: 1-2 s/page).
     rate_ms: int = 1200
@@ -64,6 +68,7 @@ class Config:
         audit = os.environ.get("RIS_AUDIT_DIR")
         return cls(
             base_url=os.environ.get("RIS_BASE_URL", DEFAULT_BASE_URL).rstrip("/"),
+            soap_url=os.environ.get("RIS_SOAP_URL", DEFAULT_SOAP_URL),
             user_agent=os.environ.get("RIS_USER_AGENT", DEFAULT_USER_AGENT),
             rate_ms=int(os.environ.get("RIS_RATE_MS", "1200")),
             timeout_s=float(os.environ.get("RIS_TIMEOUT_S", "30")),

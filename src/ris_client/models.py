@@ -83,6 +83,55 @@ class TextFormat(str, Enum):
     raw = "raw"  # unaltered original text (of whatever content_url points at)
 
 
+class HistoryApplikation(str, Enum):
+    """Applications valid for the History (Änderungen) query.
+
+    Verbatim from OGD_History_Request.xsd (HistoryRequestApplicationType).
+    NB: consolidated federal law is queried as ``Bundesnormen`` here (not
+    ``BrKons``), and consolidated state law as ``Landesnormen``.
+    """
+
+    AsylGH = "AsylGH"
+    Avn = "Avn"
+    Avsv = "Avsv"
+    Begut = "Begut"
+    BgblAlt = "BgblAlt"
+    BgblAuth = "BgblAuth"
+    BgblPdf = "BgblPdf"
+    Bks = "Bks"
+    Bundesnormen = "Bundesnormen"
+    Bvb = "Bvb"
+    Bvwg = "Bvwg"
+    Dok = "Dok"
+    Dsk = "Dsk"
+    Erlaesse = "Erlaesse"
+    Erv = "Erv"
+    Gbk = "Gbk"
+    Gemeinderecht = "Gemeinderecht"
+    GemeinderechtAuth = "GemeinderechtAuth"
+    Justiz = "Justiz"
+    KmGer = "KmGer"
+    Lgbl = "Lgbl"
+    LgblAuth = "LgblAuth"
+    LgblNO = "LgblNO"
+    Landesnormen = "Landesnormen"
+    Lvwg = "Lvwg"
+    Mrp = "Mrp"
+    Normenliste = "Normenliste"
+    PruefGewO = "PruefGewO"
+    Pvak = "Pvak"
+    RegV = "RegV"
+    Spg = "Spg"
+    Ubas = "Ubas"
+    Umse = "Umse"
+    Upts = "Upts"
+    Uvs = "Uvs"
+    Vbl = "Vbl"
+    Verg = "Verg"
+    Vfgh = "Vfgh"
+    Vwgh = "Vwgh"
+
+
 # ---------------------------------------------------------------------------
 # Request models
 # ---------------------------------------------------------------------------
@@ -106,6 +155,11 @@ class LawSearchRequest(BaseModel):
     typ: str | None = None
     kundmachungsorgan: str | None = None
     kundmachungsorgannummer: str | None = None
+    # Begut / RegV specific filters (OGD_Bundesrecht_Request.xsd).
+    einbringende_stelle: str | None = None       # Begut, RegV, BgblAuth
+    in_begutachtung_am: str | None = None        # Begut -> InBegutachtungAm (date)
+    beschluss_von: str | None = None             # RegV -> BeschlussdatumVon (date)
+    beschluss_bis: str | None = None             # RegV -> BeschlussdatumBis (date)
     sort_direction: SortDirection | None = None
     page_size: PageSize = PageSize.Twenty.value
     page_number: int = 1
@@ -124,6 +178,19 @@ class CaseSearchRequest(BaseModel):
     rechtssaetze: bool = True
     entscheidungstexte: bool = True
     geaendert_seit: ChangeSetInterval | None = None  # -> ImRisSeit
+    page_size: PageSize = PageSize.Twenty.value
+    page_number: int = 1
+
+
+class HistoryRequest(BaseModel):
+    """Change/early-warning feed (RIS History), sent via the OGD SOAP POST."""
+
+    model_config = ConfigDict(use_enum_values=True)
+
+    anwendung: HistoryApplikation
+    von: str | None = None                 # -> AenderungenVon (date)
+    bis: str | None = None                 # -> AenderungenBis (date)
+    include_deleted: bool = False
     page_size: PageSize = PageSize.Twenty.value
     page_number: int = 1
 
@@ -172,6 +239,30 @@ class SearchResult(BaseModel):
     page_size: int
     items: list[LawRecord] | list[CaseRecord]
     request_url: str
+    attribution: str
+    legal_notice: str
+
+
+class ChangeRecord(BaseModel):
+    """A single changed/new/deleted document from the History feed."""
+
+    id: str
+    applikation: str | None = None
+    titel: str | None = None
+    geaendert: str | None = None
+    veroeffentlicht: str | None = None
+    deleted: bool = False
+    eli_uri: str | None = None
+    source_url: str | None = None
+    content_urls: dict[str, str] = Field(default_factory=dict)
+
+
+class ChangesResult(BaseModel):
+    total: int
+    page_number: int
+    page_size: int
+    anwendung: str
+    items: list[ChangeRecord]
     attribution: str
     legal_notice: str
 

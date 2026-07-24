@@ -25,8 +25,12 @@ from .errors import (
 from .models import (
     CaseRecord,
     CaseSearchRequest,
+    ChangeRecord,
     ChangeSetInterval,
+    ChangesResult,
     CourtApplikation,
+    HistoryApplikation,
+    HistoryRequest,
     LawApplikation,
     LawRecord,
     LawSearchRequest,
@@ -43,9 +47,12 @@ __all__ = [
     "__version__",
     "LawSearchRequest",
     "CaseSearchRequest",
+    "HistoryRequest",
     "LawRecord",
     "CaseRecord",
+    "ChangeRecord",
     "SearchResult",
+    "ChangesResult",
     "TextResult",
     "TextFormat",
     "PageSize",
@@ -54,6 +61,7 @@ __all__ = [
     "SortDirection",
     "LawApplikation",
     "CourtApplikation",
+    "HistoryApplikation",
     "RisError",
     "InvalidArgError",
     "NotFoundError",
@@ -63,6 +71,7 @@ __all__ = [
     "list_collections",
     "search_law",
     "search_case",
+    "search_changes",
     "get_law_text",
     "get_case_text",
 ]
@@ -71,7 +80,7 @@ from .models import NormabschnittTyp  # noqa: E402  (kept in __all__)
 
 
 def list_collections() -> dict:
-    """Static overview of the RIS scope covered by v0.1 (PLAN.md §4)."""
+    """Static overview of the RIS scope covered by this server (PLAN.md §4)."""
     return {
         "version": __version__,
         "base_url": Config.from_env().base_url,
@@ -80,24 +89,32 @@ def list_collections() -> dict:
                 "covered": True,
                 "applikationen": [a.value for a in LawApplikation],
                 "default": LawApplikation.BrKons.value,
-                "note": "BrKons = konsolidiertes geltendes Recht (Kern-Mehrwert).",
+                "note": "BrKons = konsolidiertes geltendes Recht (Kern-Mehrwert). "
+                "Begut/RegV: einbringende_stelle, in_begutachtung_am, "
+                "beschluss_von/bis werden unterstützt.",
             },
             "Judikatur": {
                 "covered": True,
                 "applikationen": [c.value for c in CourtApplikation],
                 "default": CourtApplikation.Justiz.value,
             },
+            "History": {
+                "covered": True,
+                "applikationen": [h.value for h in HistoryApplikation],
+                "note": "Änderungs-/Frühwarn-Feed via OGD-SOAP. Konsolidiertes "
+                "Bundesrecht = 'Bundesnormen' (nicht 'BrKons'). "
+                "include_deleted verfügbar.",
+            },
         },
         "not_yet_covered": {
             "Landesrecht": "9 Bundesländer - Roadmap v0.3",
             "Sonstige": "Erlässe, Avsv, ... - Roadmap v0.3",
             "Bezirke/Gemeinden": "Roadmap v0.3",
-            "History (ris_list_changes)": "Änderungs-/Frühwarn-Feed - Roadmap v0.2",
         },
         "attribution": "Quelle: RIS - Rechtsinformationssystem des Bundes "
         "(data.bka.gv.at), CC BY 4.0",
-        "dataset_note": "Landesrecht, Sonstige, Bezirke und Gemeinden sind in "
-        "v0.1 noch nicht abgedeckt.",
+        "dataset_note": "Landesrecht, Sonstige, Bezirke und Gemeinden sind noch "
+        "nicht abgedeckt.",
     }
 
 
@@ -110,6 +127,11 @@ async def search_law(req: LawSearchRequest, config: Config | None = None) -> Sea
 async def search_case(req: CaseSearchRequest, config: Config | None = None) -> SearchResult:
     async with RisClient(config) as c:
         return await c.search_case(req)
+
+
+async def search_changes(req: HistoryRequest, config: Config | None = None) -> "ChangesResult":
+    async with RisClient(config) as c:
+        return await c.search_changes(req)
 
 
 async def get_law_text(content_url: str, format: TextFormat | str = TextFormat.markdown,

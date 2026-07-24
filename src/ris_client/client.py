@@ -12,6 +12,7 @@ import asyncio
 import hashlib
 import json
 from urllib.parse import urlencode, urlsplit
+from xml.sax.saxutils import escape as _xml_escape
 
 import httpx
 
@@ -26,9 +27,11 @@ from .errors import (
 )
 from .models import (
     CaseSearchRequest,
+    HistoryRequest,
     LawApplikation,
     LawSearchRequest,
     SearchResult,
+    ChangesResult,
     TextFormat,
     TextResult,
 )
@@ -86,6 +89,15 @@ def _build_law_params(req: LawSearchRequest) -> list[tuple[str, str]]:
         p.append(("Kundmachungsorgan", req.kundmachungsorgan))
     if req.kundmachungsorgannummer:
         p.append(("Kundmachungsorgannummer", req.kundmachungsorgannummer))
+    # Begut / RegV specific filters.
+    if req.einbringende_stelle:
+        p.append(("EinbringendeStelle", req.einbringende_stelle))
+    if req.in_begutachtung_am:
+        p.append(("InBegutachtungAm", req.in_begutachtung_am))
+    if req.beschluss_von:
+        p.append(("BeschlussdatumVon", req.beschluss_von))
+    if req.beschluss_bis:
+        p.append(("BeschlussdatumBis", req.beschluss_bis))
     if req.sort_direction:
         p.append(("Sortierung.SortDirection", req.sort_direction))
 
@@ -121,6 +133,42 @@ def _build_case_params(req: CaseSearchRequest) -> list[tuple[str, str]]:
     p.append(("DokumenteProSeite", req.page_size))
     p.append(("Seitennummer", str(req.page_number)))
     return p
+
+
+_SOAP_ACTION = "http://ris.bka.gv.at/ogd/V2_6/SearchDocuments"
+
+
+def build_history_soap(req: HistoryRequest) -> str:
+    """Build the SOAP envelope for a History (Änderungen) query.
+
+    The History query is only served by the OGD SOAP endpoint
+    (``SearchDocuments`` operation, ``query > Aenderungen(OGDHistoryType)``);
+    the REST GET API does not expose it. Structure per the service WSDL and
+    OGD_History_Request.xsd.
+    """
+    lines = [
+        '<tns:Anwendung>%s</tns:Anwendung>' % _xml_escape(req.anwendung),
+    ]
+    if req.von:
+        lines.append('<tns:AenderungenVon>%s</tns:AenderungenVon>' % _xml_escape(req.von))
+    if req.bis:
+        lines.append('<tns:AenderungenBis>%s</tns:AenderungenBis>' % _xml_escape(req.bis))
+    lines.append(
+        '<tns:IncludeDeletedDocuments>%s</tns:IncludeDeletedDocuments>'
+        % ("true" if req.include_deleted else "false")
+    )
+    lines.append('<tns:DokumenteProSeite>%s</tns:DokumenteProSeite>' % _xml_escape(req.page_size))
+    lines.append('<tns:Seitennummer>%d</tns:Seitennummer>' % int(req.page_number))
+    body = "".join(lines)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" '
+        'xmlns:tns="http://ris.bka.gv.at/ogd/V2_6"><soap:Body>'
+        '<tns:SearchDocuments><tns:query><tns:Aenderungen>'
+        f"{body}"
+        "</tns:Aenderungen></tns:query></tns:SearchDocuments>"
+        "</soap:Body></soap:Envelope>"
+    )
 
 
 class RisClient:
@@ -198,6 +246,45 @@ class RisClient:
         self._cache.set(cache_key, text, cache_ttl)
         return data, url
 
+    async def _post_soap(self, body: str, cache_ttl: int) -> str:
+        """POST a SOAP envelope to the OGD endpoint with rate limit + retry."""
+        cache_key = "soap:" + hashlib.sha256(body.encode()).hexdigest()
+        cached = self._cache.get(cache_key)
+        if cached is not None:
+            return cached
+        await self._limiter.acquire()
+        last_exc: Exception | None = None
+        headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": f'"{_SOAP_ACTION}"'}
+        for attempt in range(self.config.max_retries):
+            try:
+                resp = await self._http.post(
+                    self.config.soap_url, content=body.encode("utf-8"), headers=headers
+                )
+            except httpx.HTTPError as exc:
+                last_exc = UpstreamError(
+                    f"network error contacting RIS SOAP ({type(exc).__name__}: {exc})"
+                )
+            else:
+                text = resp.text
+                # SOAP faults come back as HTTP 500 with a <soap:Fault> body.
+                if "<soap:Fault>" in text or "<faultstring>" in text:
+                    fault = text.split("<faultstring>")[-1].split("</faultstring>")[0]
+                    raise UpstreamError(f"RIS SOAP fault: {fault[:300]}")
+                if resp.status_code in _RETRYABLE_STATUS:
+                    last_exc = UpstreamError(
+                        f"RIS SOAP returned HTTP {resp.status_code}"
+                    )
+                elif resp.status_code >= 400:
+                    raise UpstreamError(f"RIS SOAP returned HTTP {resp.status_code}")
+                else:
+                    self._cache.set(cache_key, text, cache_ttl)
+                    return text
+            if attempt < self.config.max_retries - 1:
+                await asyncio.sleep(min(2 ** attempt, 8))
+                await self._limiter.acquire()
+        assert last_exc is not None
+        raise last_exc
+
     # -- public: search law ------------------------------------------------
     async def search_law(self, req: LawSearchRequest) -> SearchResult:
         if not (req.suchworte or req.titel or req.gesetzesnummer
@@ -260,6 +347,24 @@ class RisClient:
             page_size=page_size,
             items=items,
             request_url=url,
+            attribution=citations.ATTRIBUTION,
+            legal_notice=citations.LEGAL_NOTICE,
+        )
+
+    # -- public: history / changes ----------------------------------------
+    async def search_changes(self, req: HistoryRequest) -> ChangesResult:
+        # Monitoring must stay fresh: use a short cache TTL (1 hour).
+        soap_text = await self._post_soap(build_history_soap(req), cache_ttl=3600)
+        envelope = mapping.soap_body_to_envelope(soap_text)
+        results, refs = mapping.iter_references(envelope)
+        total, page_number, page_size = mapping.parse_hits_total(results)
+        items = [mapping.map_change_record(ref) for ref in refs]
+        return ChangesResult(
+            total=total,
+            page_number=page_number or req.page_number,
+            page_size=page_size,
+            anwendung=req.anwendung,
+            items=items,
             attribution=citations.ATTRIBUTION,
             legal_notice=citations.LEGAL_NOTICE,
         )

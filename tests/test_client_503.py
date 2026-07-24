@@ -153,3 +153,60 @@ async def test_get_text_rejects_unknown_kwarg(cfg):
     async with RisClient(cfg) as c:
         with pytest.raises(TypeError):
             await c.get_text("https://www.ris.bka.gv.at/x/y.html", bogus="oops")
+
+
+_HISTORY_SOAP_OK = (
+    '<?xml version="1.0" encoding="utf-8"?>'
+    '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+    '<soap:Body><SearchDocumentsResponse xmlns="http://ris.bka.gv.at/ogd/V2_6">'
+    '<SearchDocumentsResult status="ok"><OgdDocumentResults>'
+    '<Hits pageNumber="1" pageSize="10">2</Hits>'
+    "<OgdDocumentReference><Data><Metadaten>"
+    "<Technisch><ID>NOR1</ID><Applikation>BrKons</Applikation></Technisch>"
+    "<Allgemein><Geaendert>2026-07-20</Geaendert>"
+    "<DokumentUrl>https://www.ris.bka.gv.at/eli/x</DokumentUrl></Allgemein>"
+    "<Bundesrecht><Kurztitel>Testgesetz</Kurztitel></Bundesrecht>"
+    "</Metadaten><Dokumentliste><ContentReference><ContentType>MainDocument"
+    "</ContentType><Urls><ContentUrl><DataType>Html</DataType>"
+    "<Url>https://www.ris.bka.gv.at/a/b.html</Url></ContentUrl></Urls>"
+    "</ContentReference></Dokumentliste></Data></OgdDocumentReference>"
+    "</OgdDocumentResults></SearchDocumentsResult></SearchDocumentsResponse>"
+    "</soap:Body></soap:Envelope>"
+)
+
+
+@respx.mock
+async def test_search_changes_parses_soap(cfg):
+    from ris_client.models import HistoryRequest
+
+    respx.post("https://data.bka.gv.at/ris/ogd/v2.6/").mock(
+        return_value=httpx.Response(200, text=_HISTORY_SOAP_OK)
+    )
+    async with RisClient(cfg) as c:
+        res = await c.search_changes(
+            HistoryRequest(anwendung="Bundesnormen", von="2026-07-10")
+        )
+    assert res.total == 2
+    assert res.anwendung == "Bundesnormen"
+    assert len(res.items) == 1
+    assert res.items[0].titel == "Testgesetz"
+    assert res.items[0].deleted is False
+    assert "attribution" in res.model_dump()
+
+
+@respx.mock
+async def test_search_changes_soap_fault_raises(cfg):
+    from ris_client.models import HistoryRequest
+
+    fault = (
+        '<?xml version="1.0"?><soap:Envelope '
+        'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>'
+        "<soap:Fault><faultstring>bad app</faultstring></soap:Fault>"
+        "</soap:Body></soap:Envelope>"
+    )
+    respx.post("https://data.bka.gv.at/ris/ogd/v2.6/").mock(
+        return_value=httpx.Response(500, text=fault)
+    )
+    async with RisClient(cfg) as c:
+        with pytest.raises(UpstreamError):
+            await c.search_changes(HistoryRequest(anwendung="Justiz"))

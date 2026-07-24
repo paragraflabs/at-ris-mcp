@@ -6,8 +6,8 @@ reference/examples_get_post.txt (the authoritative parameter source).
 
 from urllib.parse import parse_qs, urlencode
 
-from ris_client.client import _build_case_params, _build_law_params
-from ris_client.models import CaseSearchRequest, LawSearchRequest
+from ris_client.client import _build_case_params, _build_law_params, build_history_soap
+from ris_client.models import CaseSearchRequest, HistoryRequest, LawSearchRequest
 
 
 def _qs(params):
@@ -109,3 +109,59 @@ def test_case_geschaeftszahl_only():
     assert d["Geschaeftszahl"] == "Ra 2023/02/0138"
     assert "Dokumenttyp.SucheInRechtssaetzen" not in d
     assert d["Dokumenttyp.SucheInEntscheidungstexten"] == "true"
+
+
+def test_begut_specific_params():
+    p = _build_law_params(
+        LawSearchRequest(
+            titel="Abfertigung", applikation="Begut",
+            einbringende_stelle="BMA", in_begutachtung_am="2021-05-05",
+        )
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Begut"
+    assert d["EinbringendeStelle"] == "BMA"
+    assert d["InBegutachtungAm"] == "2021-05-05"
+
+
+def test_regv_beschlussdatum_params():
+    p = _build_law_params(
+        LawSearchRequest(
+            suchworte="Pilz", applikation="RegV",
+            beschluss_von="2005-01-01", beschluss_bis="2006-01-01",
+        )
+    )
+    d = dict(p)
+    assert d["Applikation"] == "RegV"
+    assert d["BeschlussdatumVon"] == "2005-01-01"
+    assert d["BeschlussdatumBis"] == "2006-01-01"
+
+
+def test_history_soap_envelope_structure():
+    soap = build_history_soap(
+        HistoryRequest(
+            anwendung="Bundesnormen", von="2026-07-10", bis="2026-07-22",
+            include_deleted=True, page_size="Ten", page_number=1,
+        )
+    )
+    assert "SearchDocuments" in soap
+    assert "<tns:Aenderungen>" in soap
+    assert "<tns:Anwendung>Bundesnormen</tns:Anwendung>" in soap
+    assert "<tns:AenderungenVon>2026-07-10</tns:AenderungenVon>" in soap
+    assert "<tns:AenderungenBis>2026-07-22</tns:AenderungenBis>" in soap
+    assert "<tns:IncludeDeletedDocuments>true</tns:IncludeDeletedDocuments>" in soap
+    assert "<tns:DokumenteProSeite>Ten</tns:DokumenteProSeite>" in soap
+
+
+def test_history_soap_defaults_false_deleted():
+    soap = build_history_soap(HistoryRequest(anwendung="Justiz"))
+    assert "<tns:IncludeDeletedDocuments>false</tns:IncludeDeletedDocuments>" in soap
+    # optional date elements omitted when not given
+    assert "AenderungenVon" not in soap
+
+
+def test_history_invalid_application_rejected():
+    import pytest
+    from pydantic import ValidationError
+    with pytest.raises(ValidationError):
+        HistoryRequest(anwendung="NichtVorhanden")

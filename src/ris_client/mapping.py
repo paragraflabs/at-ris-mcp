@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .models import LawRecord, CaseRecord
+from .models import LawRecord, CaseRecord, ChangeRecord
 
 
 def _as_list(value: Any) -> list[Any]:
@@ -148,4 +148,81 @@ def map_case_record(reference: dict[str, Any]) -> CaseRecord:
         ecli=_text(jud.get("EuropeanCaseLawIdentifier")),
         source_url=_text(allg.get("DokumentUrl")),
         content_urls=_content_urls(data),
+    )
+
+
+# ---------------------------------------------------------------------------
+# History (Änderungen) - SOAP response parsing + flat records
+# ---------------------------------------------------------------------------
+def soap_body_to_envelope(xml_text: str) -> dict[str, Any]:
+    """Parse the SOAP XML response of a History query into the same dict shape
+    as the JSON search envelope (so the shared helpers can be reused).
+
+    Uses lxml (already a dependency) via BeautifulSoup's ``xml`` parser to avoid
+    adding xmltodict. Namespaces are stripped; repeated siblings become lists.
+    """
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(xml_text, "xml")
+    result = soup.find("OgdDocumentResults")
+    if result is None:
+        # Surface SOAP faults as an empty, well-formed envelope.
+        return {"OgdSearchResult": {"OgdDocumentResults": {}}}
+
+    def node_to_dict(node) -> Any:
+        children = [c for c in node.find_all(recursive=False)]
+        if not children:
+            text = node.get_text(strip=True)
+            out: dict[str, Any] = {}
+            for k, v in node.attrs.items():
+                out[f"@{k}"] = v
+            if out:
+                if text:
+                    out["#text"] = text
+                return out
+            return text
+        d: dict[str, Any] = {}
+        for k, v in node.attrs.items():
+            d[f"@{k}"] = v
+        for child in children:
+            key = child.name
+            val = node_to_dict(child)
+            if key in d:
+                if not isinstance(d[key], list):
+                    d[key] = [d[key]]
+                d[key].append(val)
+            else:
+                d[key] = val
+        return d
+
+    return {"OgdSearchResult": {"OgdDocumentResults": node_to_dict(result)}}
+
+
+def map_change_record(reference: dict[str, Any]) -> ChangeRecord:
+    data = reference.get("Data", {})
+    meta = data.get("Metadaten", {})
+    tech = meta.get("Technisch", {})
+    allg = meta.get("Allgemein", {})
+    br = meta.get("Bundesrecht", {})
+    jud = meta.get("Judikatur", {})
+
+    titel = (
+        _text(br.get("Kurztitel"))
+        or _text(br.get("Titel"))
+        or _text(jud.get("Geschaeftszahl"))
+    )
+    urls = _content_urls(data)
+    return ChangeRecord(
+        id=_text(tech.get("ID")) or "",
+        applikation=_text(tech.get("Applikation")),
+        titel=titel,
+        geaendert=_text(allg.get("Geaendert")),
+        veroeffentlicht=_text(allg.get("Veroeffentlicht")),
+        # Heuristic: the History XSD only offers IncludeDeletedDocuments as a
+        # request flag and exposes no explicit deletion marker; a reference
+        # without any retrievable document is treated as deleted.
+        deleted=not urls,
+        eli_uri=_text(br.get("Eli")) or _text(allg.get("DokumentUrl")),
+        source_url=_text(allg.get("DokumentUrl")),
+        content_urls=urls,
     )

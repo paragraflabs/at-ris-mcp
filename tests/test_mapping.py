@@ -90,3 +90,76 @@ def test_single_reference_normalised_to_list():
     results, refs = mapping.iter_references(envelope)
     assert len(refs) == 1
     assert mapping.map_law_record(refs[0]).id == "NOR1"
+
+
+@pytest.fixture
+def begut_envelope():
+    return json.loads((FIX / "begut_search.json").read_text(encoding="utf-8"))
+
+
+@pytest.fixture
+def regv_envelope():
+    return json.loads((FIX / "regv_search.json").read_text(encoding="utf-8"))
+
+
+def test_map_begut_record(begut_envelope):
+    _, refs = mapping.iter_references(begut_envelope)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.id.startswith("BEGUT")
+    assert rec.applikation == "Begut"
+    assert rec.kurztitel
+    assert rec.content_urls.get("html", "").endswith(".html")
+
+
+def test_map_regv_record(regv_envelope):
+    _, refs = mapping.iter_references(regv_envelope)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.id.startswith("REGV")
+    assert rec.applikation == "RegV"
+    assert rec.kurztitel
+
+
+def test_soap_history_envelope_and_records():
+    xml = (FIX / "history_bundesnormen_soap.xml").read_text(encoding="utf-8")
+    env = mapping.soap_body_to_envelope(xml)
+    results, refs = mapping.iter_references(env)
+    total, page_number, page_size = mapping.parse_hits_total(results)
+    assert total > 0
+    assert page_number == 1
+    assert page_size == 10
+    assert len(refs) == 10
+    rec = mapping.map_change_record(refs[0])
+    assert rec.id.startswith("NOR")
+    assert rec.applikation == "BrKons"
+    assert rec.geaendert
+    # this window has retrievable docs -> not flagged deleted
+    assert rec.deleted is False
+    assert rec.content_urls.get("html", "").endswith(".html")
+
+
+def test_change_record_deleted_when_no_content():
+    ref = {
+        "Data": {
+            "Metadaten": {
+                "Technisch": {"ID": "NORDEL", "Applikation": "Bundesnormen"},
+                "Allgemein": {"Geaendert": "2026-07-20"},
+                "Bundesrecht": {"Kurztitel": "Weg"},
+            },
+            "Dokumentliste": {},
+        }
+    }
+    rec = mapping.map_change_record(ref)
+    assert rec.deleted is True
+    assert rec.content_urls == {}
+
+
+def test_soap_fault_yields_empty_envelope():
+    fault = (
+        '<?xml version="1.0"?><soap:Envelope '
+        'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>'
+        "<soap:Fault><faultstring>boom</faultstring></soap:Fault>"
+        "</soap:Body></soap:Envelope>"
+    )
+    env = mapping.soap_body_to_envelope(fault)
+    results, refs = mapping.iter_references(env)
+    assert refs == []

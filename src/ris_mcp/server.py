@@ -16,13 +16,13 @@ from fastmcp import FastMCP
 from ris_client import (
     CaseSearchRequest,
     Config,
+    HistoryRequest,
     LawSearchRequest,
     RisClient,
     RisError,
     __version__,
     list_collections as _list_collections,
 )
-from ris_client.errors import NotImplementedYetError
 
 mcp = FastMCP(name="at-ris-mcp")
 _config = Config.from_env()
@@ -78,6 +78,10 @@ async def ris_search_law(
     typ: str | None = None,
     kundmachungsorgan: str | None = None,
     kundmachungsorgannummer: str | None = None,
+    einbringende_stelle: str | None = None,
+    in_begutachtung_am: str | None = None,
+    beschluss_von: str | None = None,
+    beschluss_bis: str | None = None,
     page_size: str = "Twenty",
     page_number: int = 1,
 ) -> dict[str, Any]:
@@ -86,8 +90,10 @@ async def ris_search_law(
     applikation: BrKons (consolidated law, default) | BgblAuth | BgblPdf |
     BgblAlt | Begut | RegV | Erv. Use paragraph/artikel/anlage="N" or "N-M"
     for section access (BrKons), fassung_vom=YYYY-MM-DD for a historical
-    version snapshot. Each hit carries eli_uri, human_readable_citation,
-    source_url and content_urls for ris_get_law_text.
+    version snapshot. For Begut/RegV use einbringende_stelle,
+    in_begutachtung_am (Begut) or beschluss_von/beschluss_bis (RegV). Each hit
+    carries eli_uri, human_readable_citation, source_url and content_urls for
+    ris_get_law_text.
     """
     try:
         req = LawSearchRequest(
@@ -98,6 +104,9 @@ async def ris_search_law(
             gesetzesnummer=gesetzesnummer, index=index, typ=typ,
             kundmachungsorgan=kundmachungsorgan,
             kundmachungsorgannummer=kundmachungsorgannummer,
+            einbringende_stelle=einbringende_stelle,
+            in_begutachtung_am=in_begutachtung_am,
+            beschluss_von=beschluss_von, beschluss_bis=beschluss_bis,
             page_size=page_size, page_number=page_number,
         )
         async with RisClient(_config) as c:
@@ -208,22 +217,32 @@ async def ris_list_changes(
     anwendung: str,
     von: str | None = None,
     bis: str | None = None,
-    zeitraum: str | None = None,
     include_deleted: bool = False,
+    page_size: str = "Twenty",
+    page_number: int = 1,
 ) -> dict[str, Any]:
-    """Change/early-warning feed (RIS History). NOT YET IMPLEMENTED in v0.1.
+    """Change/early-warning feed (RIS History) via the OGD SOAP endpoint.
 
-    Planned for v0.2: the RIS History query requires the OGD POST endpoint
-    (the GET History endpoint currently returns HTTP 500). Tracked in the
-    roadmap. For change monitoring today, use ris_search_law /
-    ris_search_case with geaendert_seit (ImRisSeit).
+    anwendung: the application to monitor. NB: consolidated federal law is
+    queried as "Bundesnormen" (not "BrKons"), consolidated state law as
+    "Landesnormen". Other valid values include BgblAuth, Begut, RegV, Justiz,
+    Vfgh, Vwgh, Bvwg, Lvwg, Dsk, Erlaesse, ... (see ris_list_collections).
+    von/bis are YYYY-MM-DD dates (AenderungenVon/Bis). include_deleted also
+    returns removed documents. Returns changed/new/deleted documents, each with
+    id, titel, geaendert, a 'deleted' flag and content_urls where available.
     """
-    return _err(
-        NotImplementedYetError(
-            "ris_list_changes is scheduled for v0.2 (History via OGD POST). "
-            "Use geaendert_seit on ris_search_law/ris_search_case meanwhile."
+    try:
+        req = HistoryRequest(
+            anwendung=anwendung, von=von, bis=bis,
+            include_deleted=include_deleted,
+            page_size=page_size, page_number=page_number,
         )
-    )
+        async with RisClient(_config) as c:
+            res = await c.search_changes(req)
+        _audit("ris_list_changes", req.model_dump(), res.total)
+        return res.model_dump()
+    except Exception as exc:
+        return _err(exc)
 
 
 if __name__ == "__main__":
