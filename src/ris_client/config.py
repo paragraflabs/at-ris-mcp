@@ -21,7 +21,7 @@ ALLOWED_TEXT_HOSTS = ("www.ris.bka.gv.at", "ris.bka.gv.at", "data.bka.gv.at")
 # (OGD-FAQ: "Das Anfügen eines User-Agent HTTP Headers ... wird empfohlen").
 DEFAULT_USER_AGENT = (
     f"at-ris-mcp/{__version__} "
-    "(+https://github.com/anomalyco/at-ris-mcp)"
+    "(+https://github.com/paragraflabs/at-ris-mcp)"
 )
 
 
