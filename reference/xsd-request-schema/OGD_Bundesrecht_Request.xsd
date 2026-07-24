@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Ziel:		Beschreibt die Struktur von Applikationen unter Rubrik Bundesrecht
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		17.05.2021
+Datei:		OGD_Bundesrecht_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="BundesrechtSearchRequest">
+		<xs:annotation>
+			<xs:documentation>Beschreibt die Strukturen von Bundesrecht, Bgbl-Auth, Bgbl-Pdf, Bgbl-Alt, Begut, RegV, Englische-Rv</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="BrKons" type="tns:BrKonsSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Bundesrecht konsolidiert</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BgblAuth" type="tns:BgblAuthSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Bundesgesetzblatt authentisch ab 2004</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BgblPdf" type="tns:BgblPdfSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Staats- und Bundesgesetzblatt 1945 - 2003</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BgblAlt" type="tns:BgblAltSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Reichs-, Staats- und Bundesgesetzblatt 1848 - 1940</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Begut" type="tns:BegutSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Begutachtungsentwürfe</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RegV" type="tns:RegVSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Regierungsvorlagen</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Erv" type="tns:ErvSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Rechtsvorschriften in englischer Sprache (Austrian Laws)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze. Anwendbar bei BrKons, Begut, RegV</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Bundesrecht konsolidiert -->
+	<xs:complexType name="BrKonsSearchRequest">
+		<xs:sequence>
+			<xs:element name="Index" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Klassifikationsnummer der Haupt- und Untergruppe, die dem Index des Bundesrechts entspricht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (BG, V, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Abschnitt" type="tns:NormabschnittSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Abschnitt (Paragraph, Artikel, Anlage)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fassung" type="tns:Fassungsangabe" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag oder Intervall)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gesetzesnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Eindeutige Nummer des Gesetzes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsorgan" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kundmachungsorgan der Stammfassung bzw. der Novelle(n)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsorgannummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Kundmachungsorgans</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Unterzeichnungsdatum" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Unterzeichnungsdatum eines Staatsvertrages</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BrKonsSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BrKonsSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Sortierreihenfolge (Ascending, Descending)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SortedByColumn" type="tns:BrKonsSortableColumn" default="Kurzinformation" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Zu sortierende Spalte (Artikel/Paragraph/Anlage, Kurzinformation, Inkrafttretedatum)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BrKonsSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ArtikelParagraphAnlage"/>
+			<xs:enumeration value="Kurzinformation"/>
+			<xs:enumeration value="Inkrafttretensdatum"/>
+			<xs:enumeration value="Ausserkrafttretensdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Bundesgesetzblatt authentisch ab 2004 -->
+	<xs:complexType name="BgblAuthSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bgblnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Bundesgesetzblattes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachung" type="tns:DateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Datum der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EinbringendeStelle" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Einbringendes Bundesministerium</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Teil" type="tns:BgblAuthTeilSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Auswahl des Teils (I, II, oder III oder einer Kombination) eines Bundesgesetzblattes. Wenn keine Eingabe erfolgt, wird in allen Teilen gesucht.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:TypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (BG, V, etc.). Wenn keine Eingabe erfolgt, wird in allen Rechtsquellentypen gesucht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BgblAuthSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BgblAuthTeilSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInTeil1" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInTeil2" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInTeil3" type="xs:boolean" default="false" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BgblAuthSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BgblAuthSortableColumn" default="BgblNummer"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BgblAuthSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BgblNummer"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Staats- und Bundesgesetzblatt 1945 - 2003 -->
+	<xs:complexType name="BgblPdfSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bundesgesetzblatt" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Bundesgesetzblattes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundgemacht" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:TypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp eines Bundesgesetzblattes (BG, V, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Teil" type="tns:BgblPdfTeilSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Teils (I, II, oder III bzw. „alt“) eines Bundesgesetzblattes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BgblPdfSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BgblPdfTeilSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInAlt" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInTeil1" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInTeil2" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInTeil3" type="xs:boolean" default="false" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BgblPdfSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BgblPdfSortableColumn" default="Kundmachungsdatum" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BgblPdfSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fundstelle"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Reichs-, Staats- und Bundesgesetzblatt 1848 - 1940 -->
+	<xs:complexType name="BgblAltSearchRequest">
+		<xs:sequence>
+			<xs:element name="Gesetzblattnummer" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach der Gesetzblattnummer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Jahrgang" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Jahr in dem das Reichs-, Staats- oder Bundesgesetzblatt </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Stuecknummer" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach der Stück Nr.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundgemacht" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BgblAltSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BgblAltSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BgblAltSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BgblAltSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fundstelle"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Begutachtungsentwürfe -->
+	<xs:complexType name="BegutSearchRequest">
+		<xs:sequence>
+			<xs:element name="InBegutachtungAm" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Welche Entwürfe von Rechtsnormen an einem bestimmten Tag in Begutachtung waren</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EinbringendeStelle" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Einbringendes Bundesministerium</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BegutSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BegutSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BegutSortableColumn" default="Kurztitel" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BegutSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kurztitel"/>
+			<xs:enumeration value="EinbringendeStelle"/>
+			<xs:enumeration value="EndeBegutachtungsfrist"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Regierungsvorlagen -->
+	<xs:complexType name="RegVSearchRequest">
+		<xs:sequence>
+			<xs:element name="BeschlussdatumVon" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Wenn keine Angabe erfolgt, wird der Wert 01.01.2004 verwendet.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BeschlussdatumBis" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Wenn keine Angabe erfolgt, wird das aktuelle Datum verwendet.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EinbringendeStelle" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Einbringendes Bundesministerium</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:RegVSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RegVSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:RegVSortableColumn" default="Kurztitel" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="RegVSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kurztitel"/>
+			<xs:enumeration value="EinbringendeStelle"/>
+			<xs:enumeration value="Beschlussdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Rechtsvorschriften in englischer Sprache (Austrian Laws) -->
+	<xs:complexType name="ErvSearchRequest">
+		<xs:sequence>
+			<xs:element name="SearchTerms" type="tns:FulltextSearchExpression" minOccurs="0"/>
+			<xs:element name="Title" type="tns:FulltextSearchExpression" minOccurs="0"/>
+			<xs:element name="Source" type="tns:FulltextSearchExpression" minOccurs="0"/>
+			<xs:element name="Sortierung" type="tns:ErvSortExpression" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErvSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection"/>
+			<xs:element name="SortedByColumn" type="tns:ErvSortableColumn" default="Kurztitel"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ErvSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kurztitel"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

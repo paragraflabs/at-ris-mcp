@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Ziel:		Beschreibt die Struktur von Applikationen unter Rubrik Sonstige
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		02.07.2021
+Datei:		OGD_Sonstige_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="SonstigeSearchRequest">
+		<xs:annotation>
+			<xs:documentation>Beschreibt die Strukturen von Pruef, Avsv, Spg, Avn, </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="PruefGewO" type="tns:PruefGewOSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Meister- und Befähigungsprüfungsordnungen gemäß Gewerbeordnung</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Avsv" type="tns:AvsvSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Amtliche Verlautbarungen der Sozialversicherung - authentisch ab 2002</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Spg" type="tns:SpgSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Österreichische Strukturplan Gesundheit (ÖSG) und die Regionalen Strukturpläne Gesundheit (RSG)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Avn" type="tns:AvnSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Amtlichen Veterinärnachrichten (AVN) des Bundesministeriums für Arbeit, Soziales, Gesundheit und Konsumentenschutz</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="KmGer" type="tns:KmGerSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Kundmachungen der Gerichte</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Upts" type="tns:UptsSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des unabhängigen Parteien-Transparenz-Senats</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Mrp" type="tns:MrpSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Beschlussprotokolle der Ministerratssitzungen</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Erlaesse" type="tns:ErlaesseSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Erlässe der Bundesministerien</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze. Anwendbar bei BrKons, Begut, RegV</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Prüfungsordnungen gemäß Gewerbeordnung -->
+	<xs:complexType name="PruefGewOSearchRequest">
+		<xs:sequence>
+			<xs:element name="Typ" type="tns:PruefGewOSearchTyp" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Mite dem Typ einer Prüfungsordnung suchen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kundmachungsdatum einer Meister- und Befähigungsprüfungsordnung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fassung" type="tns:Fassungsangabe" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag oder Intervall)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:PruefGewOSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="PruefGewOSearchTyp">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Befaehigungspruefungsordnung"/>
+			<xs:enumeration value="Meisterpruefungsordnung"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PruefGewOSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:PruefGewOSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="PruefGewOSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Kurzinformation"/>
+			<xs:enumeration value="Inkrafttretensdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request BAmtliche Verlautbarungen der Sozialversicherung - authentisch ab 2002 -->
+	<xs:complexType name="AvsvSearchRequest">
+		<xs:sequence>
+			<xs:element name="Dokumentart" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Art der Dokumente (Satzung, Krankenordnung)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Urheber" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Urheber (oder die verlautbarende Stelle) einer amtlichen Verlautbarung der Sozialversicherung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachung" type="tns:DateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Datum der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Avsvnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer und der Jahrgang einer Kundmachung (z.B. 63/2012)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:AvsvSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AvsvSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:AvsvSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AvsvSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Avsvnummer"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Einbringer"/>
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Strukturpläne Gesundheit (ÖSG, RSG) -->
+	<xs:complexType name="SpgSearchRequest">
+		<xs:sequence>
+			<xs:element name="Spgnummer" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der Strukturpläne Gesundheit (ÖSG, RSG),(z.B. 12/2017)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OsgSuchEinschraenkung" type="tns:OsgSuchEinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Typ eines Österreichischen Strukturplans Gesundheit (ÖSG)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RsgSuchEinschraenkung" type="tns:RsgSuchEinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Typ eines Regionalen Strukturplans Gesundheit (RSG)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Datum der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fassung" type="tns:Fassungsangabe" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag oder Intervall)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:SpgSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OsgSuchEinschraenkung" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:SpgSuchEinschraenkungBase"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SpgSuchEinschraenkungBase" abstract="true">
+		<xs:sequence>
+			<xs:element name="SpgStrukturplanType" type="tns:SpgStrukturplanType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SpgStrukturplanType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Alle"/>
+			<xs:enumeration value="Gutachten"/>
+			<xs:enumeration value="Verordnungen"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RsgSuchEinschraenkung" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:SpgSuchEinschraenkungBase">
+				<xs:sequence>
+					<xs:element name="Land" type="tns:Bundesland" nillable="true" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SpgSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:SpgSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SpgSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Inkrafttretensdatum"/>
+			<xs:enumeration value="Spgnummer"/>
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Amtliche Veterinärnachrichten (AVN) ab 15.09.2004 -->
+	<xs:complexType name="AvnSearchRequest">
+		<xs:sequence>
+			<xs:element name="Avnnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer einer Amtlichen Veterinärnachricht (z.B. AVN 11/2010)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:AvnTypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Art der Veröffentlichung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachung" type="tns:DateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Datum der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FassungVom" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Geschaeftszahl" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche mit Geschäftszahl einer Amtlichen Veterinärnachricht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Norm" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche mit Rechtsnorm</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:AvnSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AvnTypSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInKundmachungen" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInVeroeffentlichungenAufGrundVEVO" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInSonstigeVeroeffentlichungen" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AvnSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:AvnSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AvnSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Avnnummer"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Kundmachungen der Gerichte -->
+	<xs:complexType name="KmGerSearchRequest">
+		<xs:sequence>
+			<xs:element name="Typ" type="tns:KmGerTypSucheinschraenkung" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Typ der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gericht" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Veröffentliches Gericht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kundmachungsdatum eimer Geschäftsordnung oder Geschäftsverteilung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fassung" type="tns:Fassungsangabe" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag oder Intervall)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:KmGerSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="KmGerTypSucheinschraenkung">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftsordnung"/>
+			<xs:enumeration value="Geschaeftsverteilung"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="KmGerSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:KmGerSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="KmGerSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Gericht"/>
+			<xs:enumeration value="Kurzinformation"/>
+			<xs:enumeration value="Inkrafttretensdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Entscheidungen des unabhängigen Parteien-Transparenz-Senats -->
+	<xs:complexType name="UptsSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsdatum Von - Bis</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Partei" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Politische Partei</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GZ" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Geschäftszahl</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Norm" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsnormen, auf die sich die Entscheidung stützt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:UptsSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UptsSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:UptsSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UptsSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GZ"/>
+			<xs:enumeration value="Partei"/>
+			<xs:enumeration value="Entscheidungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request  Beschlussprotokolle der Ministerratssitzungen sowie die Ministerratsvorträge -->
+	<xs:complexType name="MrpSearchRequest">
+		<xs:sequence>
+			<xs:element name="Einbringer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name des Ministerium</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sitzungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kundmachungsdatum einer Meister- und Befähigungsprüfungsordnung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sitzungsnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der Ministerratssitzung in GP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gesetzgebungsperiode" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Römische Nummer der Gesetzgebungsperiode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:MrpSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MrpSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:MrpSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MrpSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Sitzungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Erlässe der Bundesministerien -->
+	<xs:complexType name="ErlaesseSearchRequest">
+		<xs:sequence>
+			<xs:element name="VonInkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ab Inkrafttretensdatum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BisInkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Bis Inkrafttretensdatum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FassungVom" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>BDatum der gültigen Fassung. (Stichtag)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesministerium" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Einbringendes Bundesministerium</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Abteilung" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Abteilung oder Sektion des zuständigen Bundesministeriums</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fundstelle" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Fundstelle eines Dokuments in der Fachliteratur oder anderen Printmedien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Geschaeftszahl" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach der Geschäftszahl</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Norm" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche mit Rechtsnorm</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:ErlaesseSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErlaesseSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:ErlaesseSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ErlaesseSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Bundesministerium"/>
+			<xs:enumeration value="Genehmigungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

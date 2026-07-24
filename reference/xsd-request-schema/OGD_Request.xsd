@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2020 rel. 2 sp1 (x64) (http://www.altova.com) von Andreas Reisenhofer (Bundesministerium für Digitalisierung und Wirtschafsstandort) bearbeitet -->
+<!--
+Ziel:		Beschreibt die Struktur von OGDRisRequest
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		01.06.2021
+Datei:		OGD_Request.xsd
+Inkludiert:	OGD_Bundesrecht_Request.xsd,OGD_Landesrecht_Request.xsd,OGD_Bezirke_Request.xsd,OGD_Gemeinden_Request.xsd,
+			OGD_Judikatur_Request.xsd, OGD_Sonstige_Request.xsd,GD_History_Request.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Bundesrecht_Request.xsd"/>
+	<xs:include schemaLocation="OGD_Landesrecht_Request.xsd"/>
+	<xs:include schemaLocation="OGD_Bezirke_Request.xsd"/>
+	<xs:include schemaLocation="OGD_Gemeinden_Request.xsd"/>
+	<xs:include schemaLocation="OGD_Judikatur_Request.xsd"/>
+	<xs:include schemaLocation="OGD_Sonstige_Request.xsd"/>
+	<xs:include schemaLocation="OGD_History_Request.xsd"/>
+	<xs:element name="OGDRis">
+		<xs:annotation>
+			<xs:documentation>Stammelement der OGD-Abfrage</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="tns:OGDRisRequest"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="OGDRisRequest">
+		<xs:choice>
+			<xs:element name="Suche" type="tns:OGDSearch">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb einer Anwendung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Aenderungen" type="tns:OGDHistoryType">
+				<xs:annotation>
+					<xs:documentation>Abrufen von neuen, geänderten oder gelöschten Datensätzen innerhalb einer Anwendung und eines Zeitraums</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="OGDSearch">
+		<xs:choice>
+			<xs:element name="Bundesrecht" type="tns:BundesrechtSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Bundesnormen</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Bundesrecht_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Landesrecht" type="tns:LandesrechtSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Landesnormen</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Landesrecht_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bezirke" type="tns:BezirkeSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Landesnormen</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Bezirke_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gemeinden" type="tns:GemeindenSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Gemeinderecht</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Gemeinden_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Judikatur" type="tns:JudikaturSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Judikatur</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Judikatur_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sonstige" type="tns:SonstigeSearchRequest">
+				<xs:annotation>
+					<xs:documentation>Sonstige Kundemachungen und Erlässe</xs:documentation>
+					<xs:appinfo>
+						<xs:location>OGD_Sonstige_Request.xsd</xs:location>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+</xs:schema>

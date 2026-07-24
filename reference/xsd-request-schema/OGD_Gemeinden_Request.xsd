@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Ziel:		Beschreibt die Struktur von Gemeinderecht Requests
+Autor:		BMF V/B/6
+Version:	2.6
+Erzeugt:	17.05.2021
+Datei:		OGD_Gemeinden_Request.xsd
+Teil von:	OGD_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+Update:     10.10.2023: Add new application Gemeinderecht Authentisch (GrA) to GemeindenSearchRequest.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="GemeindenSearchRequest">
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche im Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:Bundesland" default="Undefined" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Gemeinden eines bestimmten Bundeslandes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Geschaeftszahl" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Geschäftszahl</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="Gr" type="tns:GrSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Rechtsnormen von Gemeinden (konsolidierte Texte, Stammfassungen oder Kundmachungen)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="GrA" type="tns:GrASearchRequest">
+					<xs:annotation>
+						<xs:documentation>Rechtsverbindliche Kundmachungen, insbesondere Verordnungen, von Gemeinden</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze. Verwendbar bei LrKons,LgblNO</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Gemeinderecht -->
+	<xs:complexType name="GrSearchRequest">
+		<xs:sequence>
+			<xs:element name="Gemeinde" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name der gesuchten Gemeinde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:GemeinderechtIndexTyp" default="Undefined" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Indexgruppe (Gliederung nach der Voranschlags- und Rechnungsabschlussverordnung 1997 - VRV)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FassungVom" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:GemeinderechtSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Gemeinderecht Authentisch-->
+	<xs:complexType name="GrASearchRequest">
+		<xs:sequence>
+			<xs:element name="Bezirk" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name der gesuchten Bezirsk, in dem sich Gemeinde befindet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gemeinde" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name der gesuchten Gemeinde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gemeindeverband" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name des gesuchten Gemeindeverbandes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der Kundmachung (Nr/JJJJ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:GemeinderechtAuthSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GemeinderechtIndexTyp">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="VertretungskoerperUndAllgemeineVerwaltung"/>
+			<xs:enumeration value="OeffentlicheOrdnungUndSicherheit"/>
+			<xs:enumeration value="UnterrichtErziehungSportUndWissenschaft"/>
+			<xs:enumeration value="KunstKulturUndKultus"/>
+			<xs:enumeration value="SozialeWohlfahrtUndWohnbaufoerderung"/>
+			<xs:enumeration value="Gesundheit"/>
+			<xs:enumeration value="StraßenUndWasserbauVerkehr"/>
+			<xs:enumeration value="Wirtschaftsfoerderung"/>
+			<xs:enumeration value="Dienstleistungen"/>
+			<xs:enumeration value="Finanzwirtschaft"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="GemeinderechtSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:GemeinderechtSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GemeinderechtSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Bundesland"/>
+			<xs:enumeration value="Gemeinde"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="GemeinderechtAuthSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:GemeinderechtAuthSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GemeinderechtAuthSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kundmachungsdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

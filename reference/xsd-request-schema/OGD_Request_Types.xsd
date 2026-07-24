@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+=======================================================================
+OGD_Request Schema allgemeine Typen (Abfrage OGD)
+=======================================================================
+Ziel:		Beschreibt die generischen Typen einer OGD Anfrage.
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		16.06.2020
+Datei:		OGD_Request_Types.xsd
+Teil von:	OGD_Request.xsd, OGD_Bundesgesetzblaetter_Request.xsd, OGD_Bundesnormen_Request.xsd,
+			OGD_Landesgesetzblaetter_Request.xsd, OGD_Landesnormen_Request.xsd, OGD_Judikatur_Request.xsd,
+			OGD_SVRecht_Request.xsd, OGD_History_Request.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="SearchExpression" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ExactMatchSearchExpression" mixed="false">
+		<xs:simpleContent>
+			<xs:extension base="tns:SearchExpression"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PhraseSearchExpression" mixed="false">
+		<xs:simpleContent>
+			<xs:extension base="tns:SearchExpression"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="TermSearchExpression" mixed="false">
+		<xs:simpleContent>
+			<xs:extension base="tns:SearchExpression"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="FulltextSearchExpression" mixed="false">
+		<xs:simpleContent>
+			<xs:extension base="tns:SearchExpression"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="ChangeSetInterval">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="EinerWoche"/>
+			<xs:enumeration value="ZweiWochen"/>
+			<xs:enumeration value="EinemMonat"/>
+			<xs:enumeration value="DreiMonaten"/>
+			<xs:enumeration value="SechsMonaten"/>
+			<xs:enumeration value="EinemJahr"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PageSize">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ten"/>
+			<xs:enumeration value="Twenty"/>
+			<xs:enumeration value="Fifty"/>
+			<xs:enumeration value="OneHundred"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WebSortDirection">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ascending"/>
+			<xs:enumeration value="Descending"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NormabschnittTyp">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Alle"/>
+			<xs:enumeration value="Artikel"/>
+			<xs:enumeration value="Paragraph"/>
+			<xs:enumeration value="Anlage"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NormabschnittSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="Von" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bis" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Typ" type="tns:NormabschnittTyp" default="Alle" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Fassungsangabe"/>
+	<xs:complexType name="StichtagFassungsangabe" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:Fassungsangabe">
+				<xs:sequence>
+					<xs:element name="FassungVom" type="xs:date" nillable="true"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IntervallFassungsangabe" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:Fassungsangabe">
+				<xs:sequence>
+					<xs:element name="VonInkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0"/>
+					<xs:element name="BisInkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0"/>
+					<xs:element name="VonAusserkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0"/>
+					<xs:element name="BisAusserkrafttretensdatum" type="xs:date" nillable="true" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DateInterval"/>
+	<xs:complexType name="NamedDateInterval" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:DateInterval">
+				<xs:sequence>
+					<xs:element name="Periode" type="tns:ChangeSetInterval" default="EinemJahr"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RangeDateInterval" mixed="false">
+		<xs:complexContent>
+			<xs:extension base="tns:DateInterval">
+				<xs:sequence>
+					<xs:element name="Von" type="xs:date" nillable="true" minOccurs="0"/>
+					<xs:element name="Bis" type="xs:date" nillable="true" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BundeslandSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInBurgenland" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInKaernten" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInNiederoesterreich" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInOberoesterreich" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInSalzburg" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInSteiermark" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInTirol" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInVorarlberg" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInWien" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TypSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInGesetzen" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInKundmachungen" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInVerordnungen" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInSonstiges" type="xs:boolean" default="false" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JudikaturTypSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInRechtssaetzen" type="xs:boolean" default="false" minOccurs="0"/>
+			<xs:element name="SucheInEntscheidungstexten" type="xs:boolean" default="false" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Entscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Erkenntnis"/>
+			<xs:enumeration value="Bescheid"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Bundesland">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Burgenland"/>
+			<xs:enumeration value="Kaernten"/>
+			<xs:enumeration value="Niederoesterreich"/>
+			<xs:enumeration value="Oberoesterreich"/>
+			<xs:enumeration value="Salzburg"/>
+			<xs:enumeration value="Steiermark"/>
+			<xs:enumeration value="Tirol"/>
+			<xs:enumeration value="Vorarlberg"/>
+			<xs:enumeration value="Wien"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DokumenteProSeite">
+		<xs:restriction base="tns:PageSize">
+			<xs:enumeration value="Twenty"/>
+			<xs:enumeration value="Ten"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Seitennummer">
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+</xs:schema>

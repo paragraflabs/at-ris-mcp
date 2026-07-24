@@ -1,0 +1,164 @@
+BrKons:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BrKons&Fassung.FassungVom=2021-10-18&ImRisSeit=EinerWoche
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BrKons&Suchworte=Gewinner*&Titel=Verm%C3%B6gensteuern&Index=39/*&Typ=Vertrag*&Abschnitt.Typ=Anlage&Abschnitt.Von=1&Abschnitt.Bis=5&Fassung.VonInkrafttretensdatum=1976-01-01&Fassung.BisInkrafttretensdatum=2000-01-01&Kundmachungsorgan=BGBl. Nr.&Kundmachungsorgannummer=431/1976
+
+BgblAuth:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BgblAuth&Kundmachung.Periode=EinerWoche
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BgblAuth&suchworte=Kredit*&Titel=Finanzmarktaufsichtsbehörde&Bgblnummer=432/2021&Kundmachung.Von=2021-10-11&Kundmachung.Bis=2021-10-18&EinbringendeStelle=Finanzmarktaufsichtsbehörde&Teil.SucheInTeil2=true&Typ.SucheInVerordnungen=true
+
+BgblPdf:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BgblPdf&ImRisSeit=EinemJahr
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BgblPdf&Suchworte=land*&Titel=Statistik*&Teil.SucheInTeil2=True&Typ.SucheInVerordnungen=True&Bundesgesetzblatt=396/*&Kundgemacht.Von=2003-08-28&Kundgemacht.Bis=2003-12-31
+
+BgblAlt:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=BgblAlt&Titel=Fischamend&Gesetzblattnummer=58/1937&Jahrgang=1937&Stuecknummer=15&Kundgemacht.Von=1930-01-01&Kundgemacht.Bis=1940-01-01&DokumenteProSeite=Ten&Seitennummer=1
+
+Begut:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=Begut&Suchworte=Urlaub&Titel=Abfertigungsgesetzes&InBegutachtungAm=2021-05-05&EinbringendeStelle=BMA (Bundesministerium für Arbeit)&ImRisSeit=SechsMonaten&DokumenteProSeite=Ten&Seitennummer=1
+
+RegV:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=RegV&ImRisSeit=EinerWoche
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=RegV&Suchworte=Pilz&Titel=Zivil*&BeschlussdatumVon=2005-01-01&BeschlussdatumBis=2006-01-01&EinbringendeStelle=BMJ (Bundesministerium für Justiz)
+
+Erv:
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=Erv&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Bundesrecht?Applikation=Erv&SearchTerms=Asy*&Title=Concerning&Source=100/2005&ImRisSeit=DreiMonaten
+
+LrKons
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LrKons&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LrKons&SucheInKaernten=true&Suchworte=Abfallwirtschaftsverbände&Titel=K-AWO&Index=64 Kanal und Abfall&Typ=LG&Abschnitt.Von=38&Abschnitt.Bis=40&Abschnitt.Typ=Paragraph&Fassung.VonInkrafttretensdatum=2004-04-01&Fassung.BisInkrafttretensdatum=2004-12-01&Gesetzesnummer=20000168&KundmachungsorganLGBl.Nr.&Kundmachungsorgannummer=17/2004
+
+LgblAuth
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LgblAuth&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LgblAuth&SucheInSalzburg=true&Suchworte=budget*&Titel=Landeshaushaltsgesetz&Lgblnummer=10/2018&Typ.SucheInGesetzen=True&Typ.SucheInVerordnungen=True&Kundmachung.Von=2018-01-01&Kundmachung.Bis=2018-01-31
+
+Lgbl
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=Lgbl&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=Lgbl&SucheInSalzburg=true&Suchworte=Verwaltungsstrafgesetz&Titel=Abgaben&Lgblnummer=118/2009&Typ.SucheInGesetzen=True&Kundmachung.Von=2009-12-01&Kundmachung.Bis=2009-12-31
+
+LgblNO
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LgblNO
+https://data.bka.gv.at/ris/api/v2.6/Landesrecht?Applikation=LgblNO&Suchworte=Pflanzenschutzgeräte&Titel=überprüfung*&Typ.SucheInVerordnungen=True&Index=LandUndForstwirtschaft&Gliederungszahl=6170/3-0
+
+Bvb
+https://data.bka.gv.at/ris/api/v2.6/Bezirke?Applikation=Bvb
+https://data.bka.gv.at/ris/api/v2.6/Bezirke?Applikation=Bvb&Suchworte=Hochinzidenzverordnung&Titel=Waidhofen&Bundesland=Niederösterreich&Bezirksverwaltungsbehoerde=Statutarstadt Waidhofen an der Ybbs&Kundmachungsnummer=1/2021&Kundmachungsdatum.Von=2021-11-01&Kundmachungsdatum.Bis=2021-11-05
+
+Gr
+https://data.bka.gv.at/ris/api/v2.6/Gemeinden?Applikation=Gr
+https://data.bka.gv.at/ris/api/v2.6/Gemeinden?Applikation=Gr&Suchworte=*plan&Titel=Zuweisung&Bundesland=Kaernten&Geschaeftszahl=Zahl 612*&Gemeinde=Afritz am See&Index=StraßenUndWasserbauVerkehr&FassungVom=2021-11-05
+
+GrA
+https://data.bka.gv.at/ris/api/v2.6/Gemeinden?Applikation=GrA
+https://data.bka.gv.at/ris/api/v2.6/Gemeinden?Applikation=GrA&Suchworte=Flächenwidmungsplan&Titel=Gemeindevertretung&Bundesland=Vorarlberg&Bezirk=Bregenz&Gemeinde=Alberschwende&Kundemachungsdatum.Von=2023-11-01&Kundemachungsdatum.Bis=2023-11-07&Sortierung.SortDirection=Descending&Sortierung.SortedByColumn=Kundmachungsdatum&DokumenteProSeite=Ten&Seitennummer=1
+
+Vfgh
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Vfgh&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Vfgh&Suchworte=Unvereinbarkeit&Dokumenttyp.SucheInRechtssaetzen=True&Entscheidungsart=Erkenntnis&Geschaeftszahl=G44/2021*&Index=L6650*&Norm=B-VG*&EntscheidungsdatumVon=2021-09-01&EntscheidungsdatumBis=2021-09-30&ImRisSeit=EinemMonat
+
+Vwgh
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Vwgh&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Vwgh&Suchworte=Museumstraße&Dokumenttyp.SucheInEntscheidungstexten=True&Entscheidungsart=Beschluss&Geschaeftszahl=Ro 2019*&Index=10/07 Verwaltungsgerichtshof&Norm=VwGG §55&EntscheidungsdatumVon=2020-06-01&EntscheidungsdatumBis=2020-06-30
+
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Vwgh&Dokumenttyp.SucheInEntscheidungstexten=True&Geschaeftszahl=Ra 2023/02/0138
+
+Normenliste
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Normenliste&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Normenliste&Suchworte=Fort*&Index=56/04 Sonstige öffentliche Wirtschaft&Typ=BG
+
+Justiz
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Justiz&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Justiz&Suchworte=agrar*&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=301*&Norm=AB*&Gericht=OGH&EntscheidungsdatumVon=1980-01-01&EntscheidungsdatumBis=1994-01-01&RechtlicheBeurteilung=Zusammenlegung*
+
+
+Bvwg
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Bvwg&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Bvwg&Suchworte=agrar* oder land*&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=L512 2172649-1&Norm=BFA-VG*&Entscheidungsart=Beschluss&EntscheidungsdatumVon=2017-10-01&EntscheidungsdatumBis=2017-10-31
+
+Lvwg
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Lvwg&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Lvwg&Suchworte=agrar*&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=LVwG-2014/35/0008-2&Norm=TFLG §73 litd&Entscheidungsart=Erkenntnis&Bundesland=Tirol&EntscheidungsdatumVon=2014-03-01&EntscheidungsdatumBis=2014-03-30
+
+Dsk
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Dsk&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Dsk&Suchworte=Videoaufzeichnungen&Dokumenttyp.SucheInEntscheidungstexten=True&Geschaeftszahl=DSB-D122.453/0008-DSB/2016&Norm=DSG 2000 §1 Abs3 Z1&Entscheidungsart=BescheidBeschwerde&EntscheidendeBehoerde=Datenschutzbehoerde&EntscheidungsdatumVon=2016-07-01&EntscheidungsdatumBis=2016-07-31
+
+Dok
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Dok&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Dok&Suchworte=Zusammenhang&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=109*&Norm=BDG 1979 §43&EntscheidendeBehoerde=Rechnungshof&EntscheidungsdatumVon=2014-06-01&EntscheidungsdatumBis=2014-06-30
+
+Pvak
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Pvak&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Pvak&Suchworte=Durchführungserlässe&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=B 4-PVAB/16&Norm=PVG §9 Abs2 lita&EntscheidendeBehoerde=Personalvertretungsaufsichtsbehoerde&EntscheidungsdatumVon=2016-07-01&EntscheidungsdatumBis=2017-07-31
+
+Gbk
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Gbk&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Gbk&Suchworte=GBK_II_20160713*&Geschaeftszahl=B-GBK*&Norm=§13 Abs1&Entscheidungsart=Gutachten&Kommission=BundesGleichbehandlungskommission&Senat=II&EntscheidungsdatumVon=2016-07-01&EntscheidungsdatumBis=2016-07-15
+
+Uvs
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Uvs
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Uvs&Suchworte=Migrationsverordnung&Geschaeftszahl=301*&Norm=GVG Vlbg&Entscheidungsart=Erkenntnis&Bundeland=Vorarlberg&EntscheidungsdatumVon=2011-01-01&EntscheidungsdatumBis=2013-12-31
+
+AsylGH
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=AsylGH
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=AsylGH&Suchworte=Mitwirkungspflicht&Geschaeftszahl=S18*&Norm=AsylG 2005*&Entscheidungsart=Erkenntnis&EntscheidungsdatumVon=2010-08-01&EntscheidungsdatumBis=2013-12-31
+
+Ubas
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Ubas
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Ubas&Suchworte=Fluchtalternative&Geschaeftszahl=212*&Norm=AsylG 1997*&Entscheidungsart=Bescheid&Verfasser=Leonhartsberger&EntscheidungsdatumVon=1998-01-01&EntscheidungsdatumBis=2013-12-31
+
+Umse
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Umse
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Umse&Suchworte=Murkraftwerk&Geschaeftszahl=US 1A*&Norm=AVG §44a&Kurzbezeichnung=Südgürtel&EntscheidungsdatumVon=1994-01-01&EntscheidungsdatumBis=2013-12-31
+ 
+Bks
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Bks
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Bks&Suchworte=Privatradiogesetz&Geschaeftszahl=611.001/0001-BKS/2008&Norm=PrR-G §19 Abs3&Bereich=Privatradiogesetz&EntscheidungsdatumVon=2001-01-01&EntscheidungsdatumBis=2013-12-31
+ 
+Verg
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Verg
+https://data.bka.gv.at/ris/api/v2.6/Judikatur?Applikation=Verg&Suchworte=Widerrufsentscheidung&Dokumenttyp.SucheInRechtssaetzen=True&Geschaeftszahl=04N*&Norm=BVergG 2002 §105&EntscheidendeBehoerde=Bundesvergabeamt&Entscheidungsart=Bescheid&EntscheidungsdatumVon=1994-01-01&EntscheidungsdatumBis=2014-06-30
+
+PruefGewO
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=PruefGewO&ImRisSeit=EinemJahr
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=PruefGewO&Suchworte=Medizin*&Titel=Drogistengewerbe*&Typ.Befaehigungspruefungsordnung&Kundmachungsdatum.Von=2013-01-01&Kundmachungsdatum.Bis=2021-11-11&Fassung.VonInkrafttretensdatum=2014-01-01&Fassung.BisInkrafttretensdatum=2021-04-30
+
+Avsv
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Avsv&Kundmachung.Periode=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Avsv&Suchworte=Hauptverband&Titel=Rehabilitation*&Dokumentart=Richtlinien des Hauptverbandes&Urheber=Hauptverband der österreichischen Sozialversicherungsträger (HVSV)&Kundmachungsdatum.Von=2016-01-01&Kundmachungsdatum.Bis=2016-06-30&Avsvnummer=85/2016
+
+Spg
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Spg&&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Spg&Suchworte=Kärnten&Titel=Gesundheit&OsgSuchEinschraenkung.SpgStrukturplanType=Gutachten&RsgSuchEinschraenkung.SpgStrukturplanType=Gutachten&RsgSuchEinschraenkung.Land=Kaernten&Kundmachungsdatum.Von=2017-01-01&Kundmachungsdatum.Bis=2021-11-11&Fassung.FassungVom=2021-11-11&Spgnummer=2/2020
+
+Avn
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Avn&&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Avn&Suchworte=futter&Titel=Veröffentlichung&Avnnummer=AVN 2009*&Typ.SucheInKundmachungen=True&Kundmachungsdatum.Von=2009-01-01&Kundmachung.Bis=2021-11-11&FassungVom=2021-11-11
+
+KmGer
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=KmGer&&ImRisSeit=EinemJahr
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=KmGer&Suchworte=Geschäftsverteilung&Titel=Geschäftsverteilung&Gericht=LVwG Vorarlberg&Kundmachungsdatum.Von=2021-05-01&Kundmachungsdatum.Bis=2021-11-11&Fassung.FassungVom=2021-11-11
+
+Upts
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Upts&&ImRisSeit=EinemJahr
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Upts&Suchworte=SPÖ&Entscheidungsdatum.Von=2012-07-01&Entscheidungsdatum.Bis=2021-11-12&Partei=SPÖ (Sozialdemokratische Partei Österreichs)&GZ=GZ 2020-0.508*&Norm=§6 PartG
+
+Mrp
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Mrp&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Mrp&Suchworte=Entwicklung&Einbringer=BMA (Bundesministerium für Arbeit)&Sitzungsdatum.Von=2020-01-01&Sitzungsdatum.Bis=2021-11-12&Sitzungsnummer=67&Gesetzgebungsperiode=XXVII&ImRisSeit=SechsMonaten
+
+Erlaesse
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Erlaesse&ImRisSeit=EinemMonat
+https://data.bka.gv.at/ris/api/v2.6/Sonstige?Applikation=Erlaesse&Suchworte=Delikten&Titel=Straf*&VonInkrafttretensdatum=2020-11-01&BisInkrafttretensdatum=2021-11-01&FassungVom=2021-11-12&Bundesministerium=Bundesministerium für Justiz&Fundstelle=eJABl Nr. 22/2021&Geschaeftszahl=2021-0.538.674&Norm=StPO §172&ImRisSeit=SechsMonaten
+
+------------------------------------------------------------------
+
+curl -X POST https://data.bka.gv.at/ris/api/v2.6/Bundesrecht -d @SearchDocumentsBgbla1.txt -H "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" > ResultBgbla1.json
+
+------------------------------------------------------------------
+
+curl -X POST https://data.bka.gv.at/ris/ogd/v2.6/ -d @SearchDocumentsJustiz.xml -H "Content-Type: text/xml"  > ResultJustiz.xml
+curl -X POST https://data.bka.gv.at/ris/ogd/v2.6/ -d @SearchDocumentsBrKons.xml -H "Content-Type: text/xml"  > ResultBrKons.xml
+curl -X POST https://data.bka.gv.at/ris/ogd/v2.6/ -d @SearchDocumentsAenderungen.xml -H "Content-Type: text/xml"  > ResultAenderungen.xml
+                  
+------------------------------------------------------------------

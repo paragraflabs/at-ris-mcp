@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+=======================================================================
+OGD_Request Schema Typ Judikatur (Abfrage OGD)
+=======================================================================
+Ziel:		Beschreibt die Struktur von Entscheidungen der Judikatur (Vfgh, Vwgh, Justiz, Bvwg, Lvwg, ...)
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		17.05.2021
+Datei:		OGD_Judikatur_Request.xsd
+Teil von:	OGD_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+Update:		25.01.2019 BMDW/I/B/6 REIAND Changed DskRequestEntscheidungsart entries!
+			Add KeineAngabe to VfghRequestEntscheidungsart!
+Update:     14.11.2022 BMF/V/B/6 Änderung JustizSearchRequest: Neuer Typ JustizRechtsgebiet, neue Spalten:
+            Rechtstgebiet, Fachgebiet, Entscheidungsart, u. Spruch
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="JudikaturSearchRequest">
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dokumenttyp" type="tns:JudikaturTypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Art des Datensatzes: Text oder Rechtssatz</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Geschaeftszahl" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Geschäftszahl der Entscheidung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Norm" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Von der Entscheidung betroffene Rechtsnormen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntscheidungsdatumVon" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitpunkt, ab dem Entscheidungen berücksichtigt werden sollen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntscheidungsdatumBis" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitpunkt, bis zu dem Entscheidungen berücksichtigt werden sollen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="Vfgh" type="tns:VfghSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Verfassungsgerichtshofes (VfGH) ab dem Jahr 1980</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Vwgh" type="tns:VwghSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Verwaltungsgerichtshofs</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Normenliste" type="tns:NormenlisteSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Gerichtsentscheidungen</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Justiz" type="tns:JustizSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Gerichtsentscheidungen</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Bvwg" type="tns:BvwgSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Bundesverwaltungsgerichts</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Lvwg" type="tns:LvwgSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Landesverwaltungsgerichte</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Dsk" type="tns:DskSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Datenschutzkommission, Datenschutzbehörde</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Dok" type="tns:DokSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Disziplinarkommissionen, der Disziplinaroberkommission (bis 2013) und der Berufungskommission (bis 2013)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Pvak" type="tns:PvakSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Personalvertretungs-Aufsichtskommission,Personalvertretungsaufsichtsbehörde</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Gbk" type="tns:GbkSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Bundes-Gleichbehandlungskommission (Senat I und II) und der Gleichbehandlungskommission für die Privatwirtschaft</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Uvs" type="tns:UvsSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen der Unabhängigen Verwaltungssenate (UVS) von 1991 bis 2013</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AsylGH" type="tns:AsylGHSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Asylgerichtshofes von Juli 2008 bis 2013</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Ubas" type="tns:UbasSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Unabhängigen Bundesasylsenates (UBAS) von 1998 bis Ende Juni 2008</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Umse" type="tns:UmseSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Umweltsenates von 1994 bis 2013</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Bks" type="tns:BksSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Entscheidungen des Bundeskommunikationssenates von 2001 bis 2013</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Verg" type="tns:VergSearchRequest">
+					<xs:annotation>
+						<xs:documentation>EEntscheidungen der Vergabekontrollbehörden</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Verfassungsgerichtshof (VfGH) -->
+	<xs:complexType name="VfghSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:VfghEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummerische Klassifikation des österreichischen Rechts in Sachgebiete</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sammlungsnummer" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sammlungsnummer im Rahmen der amtlichen Sammlung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:VfghSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der zurückzugebenden Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VfghEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Erkenntnis"/>
+			<xs:enumeration value="Vergleich"/>
+			<xs:enumeration value="KeineAngabe"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="VfghSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:VfghSortableColumn" default="Datum" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VfghSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Verwaltungsgerichtshof (VwGH) -->
+	<xs:complexType name="VwghSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:VwghRequestEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummerische Klassifikation des österreichischen Rechts in Sachgebiete</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sammlungsnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sammlungsnummer im Rahmen der amtlichen Sammlung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:VwghSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VwghRequestEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Erkenntnis"/>
+			<xs:enumeration value="BeschlussVS"/>
+			<xs:enumeration value="ErkenntnisVS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="VwghSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:VwghSortableColumn" default="Datum" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VwghSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Normenliste des Verwaltungsgerichtshofes -->
+	<xs:complexType name="NormenlisteSearchRequest">
+		<xs:sequence>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche im Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indexangaben des Bundes- und Landesrechts sowie des EU-Rechts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche nach dem Rechtsquellentyp einer Rechtsnorm</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsorgan" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche mit Nummer des Kundmachungsorgans</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:NormenlisteSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NormenlisteSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:NormenlisteSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="NormenlisteSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Justiz (OGH, OLG, LG, BG, OPMS, AUSL) -->
+	<xs:complexType name="JustizSearchRequest">
+		<xs:sequence>
+			<xs:element name="Rechtsgebiet" type="tns:StrafrechtOderZivilrecht" nillable="true" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>In welchem Gebiet (Zivilrecht oder Strafrecht) fand die Rechtsentscheidung statt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fachgebiet" type="tns:ExactMatchSearchExpression" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>In welches juristische Fachgebiet fällt die Entscheidung (Amtsdelikte/Korruption, Amtshaftung inkl. StEG, Anfechtungsrecht, Arbeitsrecht, Bestandsrecht, ...)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gericht" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Gericht, von dem die Entscheidung getroffen wurde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Rechtssatznummer" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Rechtssatzes, sofern es sich um einen Rechtsatz handelt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Entscheidungsart" type="tns:ExactMatchSearchExpression" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Art der juristischen Entscheidung (Ordentliche Erledigung (Sachentscheidung), Zurückweisung mangels erheblicher Rechtsfrage, Zurückweisung aus anderen Gründen, Verstärkter Senat)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RechtlicheBeurteilung" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Bei Rechtssätzen wird in der Rubrik „Rechtssatz“ und bei Entscheidungstexten in der Rubrik „Rechtliche Beurteilung“ gesucht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Spruch" type="tns:FulltextSearchExpression" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Suche im Spruch des Entscheidungstexte</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fundstelle" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Fundstellenangaben in einer amtlichen Sammlung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AenderungenSeit" type="tns:NamedDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Geänderte Datensätze ab einem bestimmten Datum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:JustizSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der zurückzugebenden Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JustizSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:JustizSortableColumn" default="Kurzinformation"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="JustizSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Gericht"/>
+			<xs:enumeration value="Typ"/>
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StrafrechtOderZivilrecht">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Zivilrecht"/>
+			<xs:enumeration value="Strafrecht"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Bundesverwaltungsgericht (BVwG) -->
+	<xs:complexType name="BvwgSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:BvwgRequestEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BvwgSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BvwgRequestEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Erkenntnis"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="BvwgSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BvwgSortableColumn" default="Datum" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BvwgSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Landesverwaltungsgerichte (LVwG) -->
+	<xs:complexType name="LvwgSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:Entscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:Bundesland" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:LvwgSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LvwgSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:LvwgSortableColumn" default="Datum" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LvwgSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+			<xs:enumeration value="Gericht"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Datenschutzbehörde -->
+	<xs:complexType name="DskSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:DskEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntscheidendeBehoerde" type="tns:DskBehoerde" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidende Behörde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:DskSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DskEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="BescheidBeschwerde"/>
+			<xs:enumeration value="BescheidAmtswegigesPruefverfahren"/>
+			<xs:enumeration value="VerwaltungsstraferkenntnisVerwarnungErmahnung"/>
+			<xs:enumeration value="BescheidWissenschaftStatistikArchiv"/>
+			<xs:enumeration value="BescheidInternatDatenverkehr"/>
+			<xs:enumeration value="BescheidAkkreditierungZertifizierung"/>
+			<xs:enumeration value="BescheidVerhaltensregeln"/>
+			<xs:enumeration value="BescheidWarnung"/>
+			<xs:enumeration value="BescheidRegistrierung"/>
+			<xs:enumeration value="BescheidSonstiger"/>
+			<xs:enumeration value="Empfehlung"/>
+			<xs:enumeration value="Verfahrensschriftsaetze"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DskBehoerde">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Datenschutzkommission"/>
+			<xs:enumeration value="Datenschutzbehoerde"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="DskSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:DskSortableColumn"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DskSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Disziplinarkommissionen, Disziplinaroberkommission, Berufungskommission -->
+	<xs:complexType name="DokSearchRequest">
+		<xs:sequence>
+			<xs:element name="EntscheidendeBehoerde" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidende Behörde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:DokSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DokSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:DokSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DokSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Behoerde"/>
+			<xs:enumeration value="Datum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Personalvertretungsaufsichtsbehörde (vor 2014: Personalvertretungs-Aufsichtskommission) -->
+	<xs:complexType name="PvakSearchRequest">
+		<xs:sequence>
+			<xs:element name="EntscheidendeBehoerde" type="tns:PvakBehoerde" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidende Behörde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:PvakSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="PvakBehoerde">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="PersonalvertretungsAufsichtskommission"/>
+			<xs:enumeration value="Personalvertretungsaufsichtsbehoerde"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PvakSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:PvakSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="PvakSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Gleichbehandlungskommissionen ab 2014 -->
+	<xs:complexType name="GbkSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:GbkRequestEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kommission" type="tns:GbkKommission" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Art der Kommission (BundesGleichbehandlungskommissio, Gleichbehandlungskommission)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Senat" type="tns:GbkSenat" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidender Senat (I, II, III)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Diskriminierungsgrund" type="tns:GbkDiskriminierungsgrund" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Diskriminierungsgrund</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:GbkSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GbkRequestEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Einzelfallpruefungsergebnis"/>
+			<xs:enumeration value="Gutachten"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GbkKommission">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="BundesGleichbehandlungskommission"/>
+			<xs:enumeration value="Gleichbehandlungskommission"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GbkSenat">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="II"/>
+			<xs:enumeration value="III"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GbkDiskriminierungsgrund">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Geschlecht"/>
+			<xs:enumeration value="EthnischeZugehoerigkeit"/>
+			<xs:enumeration value="Religion"/>
+			<xs:enumeration value="Weltanschauung"/>
+			<xs:enumeration value="Alter"/>
+			<xs:enumeration value="SexuelleOrientierung"/>
+			<xs:enumeration value="Mehrfachdiskriminierung"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="GbkSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:GbkSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GbkSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Kommission"/>
+			<xs:enumeration value="Senat"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Diskriminierungsgrund"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Unabhängige Verwaltungssenate -->
+	<xs:complexType name="UvsSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:Entscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:Bundesland" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indexangaben des Index des Bundes- und Landesrechts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sammlungsnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sammlungsnummer des Dokuments</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:UvsSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UvsSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:UvsSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UvsSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Behoerde"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Asylgerichtshof (AsylGH) -->
+	<xs:complexType name="AsylGHSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:AsylGHEntscheidungsartSucheinschraenkung" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Erkenntnis, Beschluss, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:AsylGHSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AsylGHEntscheidungsartSucheinschraenkung">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Erkenntnis"/>
+			<xs:enumeration value="ErkenntnisGrundsatzentscheidung"/>
+			<xs:enumeration value="ErkenntnisVerstaerkterSenat"/>
+			<xs:enumeration value="Bescheid"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="AsylGHSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:AsylGHSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AsylGHSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Unabhängiger Bundesasylsenat -->
+	<xs:complexType name="UbasSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:UbasEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Bescheid, Ersatzbescheid)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Verfasser" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Namen des Verfassers einer Entscheidung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indexangaben des Index des Bundesrechts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Spruch" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche im Entscheidungsspruch</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:UbasSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UbasEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Bescheid"/>
+			<xs:enumeration value="Ersatzbescheid"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="UbasSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:UbasSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UbasSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Umweltsenat -->
+	<xs:complexType name="UmseSearchRequest">
+		<xs:sequence>
+			<xs:element name="Kurzbezeichnung" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indexangaben des Index des Bundesrechts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:UmseSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UmseSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:UmseSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UmseSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+			<xs:enumeration value="Kurzinformation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Bundeskommunikationssenat -->
+	<xs:complexType name="BksSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bereich" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsmaterien (Fernseh-Exklusivrechtegesetz, ORF-Gesetz, ...)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BksSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BksSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BksSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BksSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Bereich"/>
+			<xs:enumeration value="Typ"/>
+			<xs:enumeration value="Rechtsnorm"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Vergabekontrollbehörden -->
+	<xs:complexType name="VergSearchRequest">
+		<xs:sequence>
+			<xs:element name="Entscheidungsart" type="tns:VergEntscheidungsart" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidungsart (Bescheid, Ersatzbescheid)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntscheidendeBehoerde" type="tns:TermSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entscheidende Behörde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:VergSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VergEntscheidungsart">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Bescheid"/>
+			<xs:enumeration value="Beschluss"/>
+			<xs:enumeration value="Empfehlung"/>
+			<xs:enumeration value="Gutachten"/>
+			<xs:enumeration value="Vorabentscheidungsantrag"/>
+			<xs:enumeration value="Vorabentscheidung"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="VergSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:VergSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VergSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Geschaeftszahl"/>
+			<xs:enumeration value="Behoerde"/>
+			<xs:enumeration value="Datum"/>
+			<xs:enumeration value="Art"/>
+			<xs:enumeration value="Typ"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

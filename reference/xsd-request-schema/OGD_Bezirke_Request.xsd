@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Ziel:		Beschreibt die Struktur von Bezirke Requests
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		01.06.2021
+Datei:		OGD_Bezirke_Request.xsd
+Teil von:	OGD_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="BezirkeSearchRequest">
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:BvbBundesland" default="Undefined" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Bundesland der Bezirksverwaltungsbehörde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="Bvb" type="tns:BvbSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Kundmachungen, insbesondere Verordnungen, von Bezirksverwaltungsbehörden</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Kundmachung einer Bezirksverwaltungsbehoerde -->
+	<xs:complexType name="BvbSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bezirksverwaltungsbehoerde" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name des Einbringers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Kundmachungsorgans</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:BvbSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BvbBundesland">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="Burgenland"/>
+			<xs:enumeration value="Kärnten"/>
+			<xs:enumeration value="Niederösterreich"/>
+			<xs:enumeration value="Oberösterreich"/>
+			<xs:enumeration value="Salzburg"/>
+			<xs:enumeration value="Steiermark"/>
+			<xs:enumeration value="Tirol"/>
+			<xs:enumeration value="Vorarlberg"/>
+			<xs:enumeration value="Wien"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="BvbSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:BvbSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BvbSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Bezirksverwaltungsbehoerde"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

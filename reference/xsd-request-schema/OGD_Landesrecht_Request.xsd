@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Ziel:		Beschreibt die Struktur von Landesrecht Requests
+Autor:		BMDW I/B/6
+Version:		2.6
+Erzeugt:		15.06.2020
+Datei:		OGD_Landesrecht_Request.xsd
+Teil von:	OGD_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="LandesrechtSearchRequest">
+		<xs:sequence>
+			<xs:element name="Suchworte" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Suche innerhalb des gesamten Textes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Titel" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Titel</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="LrKons" type="tns:LrKonsSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Landesrecht konsolidiert</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="LgblAuth" type="tns:LgblAuthSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Landesgesetzblätter authentisch seit 2014 bzw 2015</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Lgbl" type="tns:LgblSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Landesgesetzblätter (nicht authentisch)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="LgblNO" type="tns:LgblNoSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Landesgesetzblätter Niederösterreich (nicht authentisch) bis 2014</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Vbl" type="tns:VblSearchRequest">
+					<xs:annotation>
+						<xs:documentation>Verordnungsblätter der Länder</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ImRisSeit" type="tns:ChangeSetInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum der zuletzt im Ris veröffentlichten Datensätze. Verwendbar bei LrKons,LgblNO</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Request Landesrecht in konsolidierter Fassung -->
+	<xs:complexType name="LrKonsSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bundesland" type="tns:BundeslandSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Klassifikationsnummer der Haupt- und Untergruppe, die dem Index des Landesrechts entspricht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:FulltextSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (LG, V, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Abschnitt" type="tns:NormabschnittSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Abschnitt (Paragraph, Artikel, Anlage)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Fassung" type="tns:Fassungsangabe" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag oder Intervall)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gesetzesnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Eindeutige Nummer des Gesetzes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsorgan" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kundmachungsorgan der Stammfassung bzw. der Novelle(n)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsorgannummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Kundmachungsorgans</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Unterzeichnungsdatum" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Unterzeichnungsdatum eines Staatsvertrages</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:LrKonsSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LrKonsSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Ascending" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Sort Direction: Ascending, Descending</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SortedByColumn" type="tns:LrKonsSortableColumn" default="Kurzinformation">
+				<xs:annotation>
+					<xs:documentation>Sorted By Column: Artikel/Paragraph/Anlage, Kurzinformation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LrKonsSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ArtikelParagraphAnlage"/>
+			<xs:enumeration value="Kurzinformation"/>
+			<xs:enumeration value="Inkrafttretensdatum"/>
+			<xs:enumeration value="Ausserkrafttretensdatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Landesgesetzblätter authentisch -->
+	<xs:complexType name="LgblAuthSearchRequest">
+		<xs:sequence>
+			<xs:element name="Lgblnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Landesgesetzblattes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:BundeslandSucheinschraenkung" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachung" type="tns:DateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:TypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (LG, V, etc.). Wenn keine Eingabe erfolgt, wird in allen Rechtsquellentypen gesucht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:LgblAuthSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LgblAuthSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending"/>
+			<xs:element name="SortedByColumn" type="tns:LgblAuthSortableColumn" default="Kundmachungsdatum"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LgblAuthSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LgblNummer"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Bundesland"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Landesgesetzblätter nicht authentisch -->
+	<xs:complexType name="LgblSearchRequest">
+		<xs:sequence>
+			<xs:element name="Lgblnummer" type="tns:PhraseSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer des Landesgesetzblattes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachung" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitraum für zuletzt im Ris kundgemachte Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Bundesland" type="tns:LgblBundeslandSucheinschraenkung" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Typ" type="tns:TypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (LG, V, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:LgblSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LgblBundeslandSucheinschraenkung">
+		<xs:sequence>
+			<xs:element name="SucheInBurgenland" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInKaernten" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInOberoesterreich" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInSalzburg" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInSteiermark" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInTirol" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SucheInVorarlberg" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LgblSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending"/>
+			<xs:element name="SortedByColumn" type="tns:LgblSortableColumn" default="Kundmachungsdatum"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LgblSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fundstelle"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Bundesland"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Landesgesetzblatt nicht authentisch für Niederösterreich -->
+	<xs:complexType name="LgblNoSearchRequest">
+		<xs:sequence>
+			<xs:element name="Gliederungszahl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Gliederungszahl (= Nummer des Landesgesetzblattes)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:restriction base="tns:ExactMatchSearchExpression">
+							<xs:pattern value=".*[^\*]"/>
+						</xs:restriction>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Typ" type="tns:TypSucheinschraenkung" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rechtsquellentyp einer Rechtsnorm (LG, V, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Index" type="tns:LgblNoIndex" default="Undefined" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Klassifikationsnummer der Haupt- und Untergruppe, die dem Index des Landesrechts entspricht</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FassungVom" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum der gültigen Fassung. (Stichtag)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ausgabedatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ausgabedatum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:LgblNoSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LgblNoIndex">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Undefined"/>
+			<xs:enumeration value="VerfassungsUndOrganisationsrecht"/>
+			<xs:enumeration value="Gemeinderecht"/>
+			<xs:enumeration value="Dienstrecht"/>
+			<xs:enumeration value="Finanzrecht"/>
+			<xs:enumeration value="InnereVerwaltung"/>
+			<xs:enumeration value="Kulturrecht"/>
+			<xs:enumeration value="LandUndForstwirtschaft"/>
+			<xs:enumeration value="Wirtschaftsrecht"/>
+			<xs:enumeration value="BodenUndVerkehrsrecht"/>
+			<xs:enumeration value="Sozialrecht"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="LgblNoSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" default="Descending"/>
+			<xs:element name="SortedByColumn" type="tns:LgblNoSortableColumn" default="Ausgabedatum"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LgblNoSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Gliederungszahl"/>
+			<xs:enumeration value="Ausgabedatum"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Request Verordnungsblätter der Länder -->
+	<xs:complexType name="VblSearchRequest">
+		<xs:sequence>
+			<xs:element name="Bundesland" type="tns:Bundesland" default="Undefined" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Bundesland</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Einbringer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Landesbehörde (Landesregierung/Landeshauptmann/Amt der Landesregierung/Sonstige Landesbehörden)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsnummer" type="tns:ExactMatchSearchExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kundmachungsdatum" type="tns:RangeDateInterval" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum Kundmachung</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sortierung" type="tns:VblSortExpression" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortierung der ausgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VblSortExpression">
+		<xs:sequence>
+			<xs:element name="SortDirection" type="tns:WebSortDirection" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SortedByColumn" type="tns:VblSortableColumn" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="VblSortableColumn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Kundmachungsorgan"/>
+			<xs:enumeration value="Kundmachungsdatum"/>
+			<xs:enumeration value="Bundesland"/>
+			<xs:enumeration value="Einbringer"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

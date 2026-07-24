@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+=======================================================================
+OGD_Request Schema Typ History (Änderungen OGD)
+=======================================================================
+Ziel:		Beschreibt die Struktur einer History-Anfrage
+Autor:		BMF V/B/6
+Version:	2.6
+Erzeugt:	17.05.2021
+Datei:		OGD_History_Request.xsd
+Teil von:	OGD_Request.xsd
+Inkludiert:	OGD_Request_Types.xsd
+Update:		2023-10-12: +GemeinderechtAuth
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.bka.gv.at/ogd/V2_6" targetNamespace="http://ris.bka.gv.at/ogd/V2_6" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="OGD_Request_Types.xsd"/>
+	<xs:complexType name="OGDRisHistory">
+		<xs:annotation>
+			<xs:documentation>OGD-History-Abfrage (geänderte oder gelöschte Datensätze)</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="OGDHistoryType">
+		<xs:sequence>
+			<xs:element name="Anwendung" type="tns:HistoryRequestApplicationType">
+				<xs:annotation>
+					<xs:documentation>Anwendung, in der gesucht werden soll</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AenderungenVon" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitpunkt, ab dem Änderungen berücksichtigt werden sollen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AenderungenBis" type="xs:date" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zeitpunkt, bis zu dem Änderungen berücksichtigt werden sollen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IncludeDeletedDocuments" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Angabe, ob auch gelöschte Datensätze abgefragt werden sollen</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DokumenteProSeite" type="tns:PageSize" default="Twenty" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Anzahl der pro Seite zurückgegebenen Datensätze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Seitennummer" type="tns:Seitennummer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nummer der zurückzugebdenden Seite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="HistoryRequestApplicationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AsylGH">
+				<xs:annotation>
+					<xs:documentation>Asylgerichtshof</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Avn">
+				<xs:annotation>
+					<xs:documentation>Amtliche Veterinärnachrichten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Avsv">
+				<xs:annotation>
+					<xs:documentation>Amtliche Verlautbarung der Sozialversicherungsträger</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Begut">
+				<xs:annotation>
+					<xs:documentation>Begutachtungsentwürfe</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BgblAlt">
+				<xs:annotation>
+					<xs:documentation>Reichs-, Staats- und Bundesgesetzblatt 1848 - 1940</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BgblAuth">
+				<xs:annotation>
+					<xs:documentation>Bundesgesetzblätter authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BgblPdf">
+				<xs:annotation>
+					<xs:documentation>Bundesgesetzblätter nicht authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Bks">
+				<xs:annotation>
+					<xs:documentation>Bundeskommunikationssenat</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Bundesnormen">
+				<xs:annotation>
+					<xs:documentation>Bundesnormen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Bvb">
+				<xs:annotation>
+					<xs:documentation>Kundmachungen der Bezirksverwaltungsbehörden</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Bvwg">
+				<xs:annotation>
+					<xs:documentation>Bundesverwaltungsgericht</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Dok">
+				<xs:annotation>
+					<xs:documentation>Disziplinarkommission</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Dsk">
+				<xs:annotation>
+					<xs:documentation>Datenschutzbehörde</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Erlaesse">
+				<xs:annotation>
+					<xs:documentation>Erlässe der Bundesministerien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Erv">
+				<xs:annotation>
+					<xs:documentation>Austrian Laws</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Gbk">
+				<xs:annotation>
+					<xs:documentation>Gleichbehandlungskommission</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Gemeinderecht">
+				<xs:annotation>
+					<xs:documentation>Gemeinderecht</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="GemeinderechtAuth">
+				<xs:annotation>
+					<xs:documentation> Gemeinderecht authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Justiz">
+				<xs:annotation>
+					<xs:documentation>Justiz (OGH, OLG, LG, BG, OPMS, AUSL)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="KmGer">
+				<xs:annotation>
+					<xs:documentation>Kundmachungen der Gerichte</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Lgbl">
+				<xs:annotation>
+					<xs:documentation>Landesgesetzblätter nicht authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LgblAuth">
+				<xs:annotation>
+					<xs:documentation>Landesgesetzblätter authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LgblNO">
+				<xs:annotation>
+					<xs:documentation>Landesgesetzblätter Niederösterreich nicht authentisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Landesnormen">
+				<xs:annotation>
+					<xs:documentation>Landesnormen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Lvwg">
+				<xs:annotation>
+					<xs:documentation>Landesverwaltungsgericht</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Mrp">
+				<xs:annotation>
+					<xs:documentation>Beschlussprotokolle der Ministerratssitzungen, Ministerratsvorträge</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Normenliste">
+				<xs:annotation>
+					<xs:documentation>Normenliste des Verwaltungsgerichtshofes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PruefGewO">
+				<xs:annotation>
+					<xs:documentation>Prüfungsordnungen gemäß Gewerbeordnung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Pvak">
+				<xs:annotation>
+					<xs:documentation>Personalvertretungsaufsichtsbehörde</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RegV">
+				<xs:annotation>
+					<xs:documentation>Regierungsvorlagen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Spg">
+				<xs:annotation>
+					<xs:documentation>Strukturpläne Gesundheit (ÖSG, RSG)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Ubas">
+				<xs:annotation>
+					<xs:documentation>Unabhängiger Bundesasylsenat</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Umse">
+				<xs:annotation>
+					<xs:documentation>Umweltsenat</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Upts">
+				<xs:annotation>
+					<xs:documentation>Entscheidungen des unabhängigen Parteien-Transparenz-Senats</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Uvs">
+				<xs:annotation>
+					<xs:documentation>Unabhängige Verwaltungssenate (UVS)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Vbl">
+				<xs:annotation>
+					<xs:documentation>Verordnungsblätter der Länder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Verg">
+				<xs:annotation>
+					<xs:documentation>Vergabekontrollbehörden</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Vfgh">
+				<xs:annotation>
+					<xs:documentation>Verfassungsgerichtshof</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Vwgh">
+				<xs:annotation>
+					<xs:documentation>Verwaltungsgerichtshof</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,25 @@
+at-ris-mcp
+Copyright 2026 at-ris-mcp contributors
+
+This product includes software licensed under the Apache License, Version 2.0.
+
+------------------------------------------------------------------------------
+DATA / CONTENT NOTICE
+------------------------------------------------------------------------------
+This software retrieves legal documents from the RIS (Rechtsinformationssystem
+des Bundes), operated by the Republic of Austria (Bundeskanzleramt),
+via the public OGD interface at https://data.bka.gv.at/.
+
+The retrieved documents (statutes, case law, official gazettes) are provided by
+the Republic of Austria under the Creative Commons Attribution 4.0 International
+licence (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+  Source: RIS - Rechtsinformationssystem des Bundes (data.bka.gv.at), CC BY 4.0
+
+Only the authentic promulgation text ("Bundesgesetzblatt authentisch" /
+"Landesgesetzblatt authentisch") is legally binding. Consolidated law and all
+other documents are provided for information only and constitute no legal advice.
+No warranty is given for correctness, currency or completeness of the data.
+
+The CC BY 4.0 licence of the DATA is separate from and does not affect the
+Apache-2.0 licence of this software's SOURCE CODE.

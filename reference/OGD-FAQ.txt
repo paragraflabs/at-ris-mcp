@@ -1,0 +1,252 @@
+RIS - Open Government Data (OGD) F.A.Q
+Häufigste Fragen und Antworten
+
+Dieses Dokument beinhaltet eine Zusammenstellung der wichtigsten Fragen und
+Antworten (sowie weiterführenden Informationen und Kontaktadressen) rund um
+die OGD-Schnittstellen des Rechtsinformationssystems des Bundes (RIS).
+
+
+
+Zugang und Lizenzbedingungen
+
+
+    Bedarf es einer speziellen Registrierung oder Freischaltung, um auf die OGD-
+    Schnittstellen bzw. Daten zugreifen zu können?
+
+    Die Schnittstellen sind öffentlich verfügbar. Eine explizite Registrierung,
+    Freischaltung oder dergleichen ist nicht erforderlich. Bitte beachten Sie aber die
+    Hinweise auf die Zugriffsmodalitäten im Abschnitt „Technische
+    Rahmenbedingungen“ weiter unten.
+
+    Haben Sie eine Applikation oder ein Service entwickelt, die auf den RIS-Daten
+    basiert, dann können Sie diese im data.gv.at-Portal unter
+    https://www.data.gv.at/anwendungen/anwendung-einreichen/ einreichen, um
+    sie einem größeren Nutzer:innenkreis zugänglich zu machen.
+
+    Bitte informieren Sie sich vor Nutzung der OGD-Schnittstellen und Daten über die
+    data.gv.at Netiquette: https://www.data.gv.at/infos/netiquette/
+
+
+
+
+    Wo befindet sich die Dokumentation zu den OGD-Schnittstellen?
+
+    Die Handbücher, Beschreibungen mit Beispielen und weiterführende
+    Informationen können unter der folgenden Webadresse eingesehen werden:
+    https://www.data.gv.at/datasets/0fb9ae1a-92cb-4ab8-a589-
+    470c16d4fe21?locale=de
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q
+    Welchen Nutzungsbedingungen bzw. urheberrechtlichen Vorgaben unterliegen
+    die über die Schnittstellen bezogenen Daten?
+
+    Die Nutzung der RIS Daten via OGD erfolgt gemäß der Namensnennung 4.0
+    International - Creative Commons
+    (https://creativecommons.org/licenses/by/4.0/deed.de); beachten Sie daher die
+    erforderliche Namensnennung.
+
+    Bitte nehmen Sie zur Kenntnis, dass aus der Verwendung der abgerufenen
+    Informationen und Schnittstellen keinerlei Rechtsansprüche abgeleitet werden
+    können.
+
+
+
+
+    Bestehen Einschränkungen hinsichtlich einer kommerziellen vs. nicht-
+    kommerziellen Nutzung?
+
+    Eine kommerzielle Nutzung ist von der Namensnennung 4.0 International -
+    Creative Commons (https://creativecommons.org/licenses/by/4.0/deed.de)
+    abgedeckt; bitte beachten Sie in diesem Zusammenhang die erforderliche
+    Namensnennung.
+
+    Bitte nehmen Sie des Weiteren zur Kenntnis, dass es keine Gewähr für die
+    Richtigkeit, Aktualität oder Vollständigkeit der zur Verfügung gestellten Daten
+    oder die ständige Verfügbarkeit der Services gibt. Aus der Verwendung der
+    abgerufenen Informationen und Schnittstellen können keinerlei Rechtsansprüche
+    abgeleitet werden können. Es ist ausschließlich der Wortlaut im
+    Bundesgesetzblatt (Applikation "Bundesgesetzblatt authentisch") bzw. in den
+    jeweiligen Landesgesetzblättern (Applikation: "Landesgesetzblatt authentisch" für
+    das entsprechende Bundesland) rechtlich verbindlich.
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q                                                2 von 6
+Technische Rahmenbedingungen
+
+
+    Können ausgewählte Inhalte aus dem RIS (oder die Daten einer kompletten
+    Applikation, z.B. "Bundesrecht konsolidiert") in Form einer ZIP-Datei
+    heruntergeladen werden?
+
+    Nein, dies ist derzeit (noch) nicht möglich (auch nicht über die OGD-
+    Schnittstellen).
+
+
+
+
+    Welche technischen Limitierungen müssen bei der Nutzung der Schnittstellen
+    beachtet werden?
+
+    Bitte achten Sie bei der Umsetzung Ihrer Applikation darauf, dass bei der
+    seitenweisen Einholung des Ergebnisses bzw. der Dokumente kurze Pausen von
+    etwa 1 – 2 Sekunden eingelegt werden. Zudem sollten derart massive Zugriffe
+    außerhalb der Bürozeiten (18:00 - 06:00) oder nur am Wochenende erfolgen,
+    damit der aktuelle Betrieb des RIS-Abfragesystems nicht beeinträchtigt wird.
+
+    Beabsichtigen Sie einen „Massendownload“ (d.h. das Beziehen von allen Daten
+    oder großer Datenbestände einer RIS-Applikation), dann ist dies uns an die
+    Serviceadresse ris.it@bka.gv.at mitzuteilen, um eine fälschliche Einordnung dieser
+    Abfrage als DDOS-Attacke zu vermeiden.
+
+    Das Anfügen eines User-Agent HTTP Headers (z.B. Name Ihrer Software)
+    vereinfacht die Administration und wird daher empfohlen.
+
+    Bitte fügen Sie Ihrer Meldung folgende Angaben hinzu: a) Die IP-Adresse (bzw.
+    den IP-Adressen-Bereich), von der die Anfragen kommen werden, b) den
+    Zeitpunkt Ihrer Abfrage (Tag/e und Uhrzeit bzw. Zeitraum; falls regelmäßige
+    Zugriffe geplant sind: die voraussichtlichen wiederkehrenden Zeitpunkte), c) (falls
+    vorhanden) der übergebene User-Agent HTTP Header, d) (falls vorhanden) das
+    voraussichtliche zeitliche Ende Ihrer Abfragen und e) sonstige, für unsere
+    Netzwerktechnik wichtige Informationen.
+
+    Sollten Sie den Betrieb Ihrer Applikation endgültig einstellen, bitten wir um eine
+    erneute Benachrichtigung an die Serviceadresse ris.it@bka.gv.at mit Angabe der
+    IP-Adresse(n) und (falls vorhanden) der übergebene User-Agent HTTP Header.
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q                                                   3 von 6
+    Welche Empfehlung gibt es für die Verarbeitung der Daten in einer Applikation
+    (oder z.B. in einer KI)?
+
+    Falls Sie lediglich Teilbereiche oder nur bestimmte Gesetze in ihrer Applikation
+    (oder in einer KI) verarbeiten möchten und Tagesaktualität keine Rolle spielen,
+    empfehlen wir, die betroffenen Rechtsvorschriften manuell herunterzuladen und
+    dann einer Weiterverarbeitung zuzuführen.
+
+
+
+
+    Was muss bei der Abfrage von größeren Datenmengen beachtet werden
+    (initialer Massendownload)?
+
+    Bitte achten Sie bei der Umsetzung Ihrer Applikation darauf, dass bei der
+    seitenweisen Einholung des Ergebnisses bzw. der Dokumente kurze Pausen von
+    etwa 1 – 2 Sekunden eingelegt werden. Zudem sollten derart massive Zugriffe
+    außerhalb der Bürozeiten (18:00 - 06:00) oder nur am Wochenende erfolgen,
+    damit der aktuelle Betrieb des RIS-Abfragesystems nicht beeinträchtigt wird.
+
+    Beabsichtigen Sie einen „Massendownload“ (d.h. das Beziehen von allen Daten
+    oder großer Datenbestände einer RIS-Applikation), dann ist dies uns an die
+    Serviceadresse ris.it@bka.gv.at mitzuteilen, um eine fälschliche Einordnung dieser
+    Abfrage als DDOS-Attacke zu vermeiden.
+
+    Das Anfügen eines User-Agent HTTP Headers (z.B. Name Ihrer Software)
+    vereinfacht die Administration und wird daher empfohlen.
+
+    Bitte fügen Sie Ihrer Meldung folgende Angaben hinzu: a) Die IP-Adresse (bzw.
+    den IP-Adressen-Bereich), von der die Anfragen kommen werden, b) den
+    Zeitpunkt Ihrer Abfrage (Tag/e und Uhrzeit bzw. Zeitraum; falls regelmäßige
+    Zugriffe geplant sind: die voraussichtlichen wiederkehrenden Zeitpunkte), c) (falls
+    vorhanden) der übergebene User-Agent HTTP Header, d) (falls vorhanden) das
+    voraussichtliche zeitliche Ende Ihrer Abfragen und e) sonstige, für unsere
+    Netzwerktechnik wichtige Informationen.
+
+    Sollten Sie den Betrieb Ihrer Applikation endgültig einstellen, bitten wir um eine
+    erneute Benachrichtigung an die Serviceadresse ris.it@bka.gv.at mit Angabe der
+    IP-Adresse(n) und (falls vorhanden) der übergebene User-Agent HTTP Header.
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q                                                   4 von 6
+Spezifische Detailfragen
+
+
+    Gibt es irgendwelche Einschränkungen bei der Komplexität oder Art der
+    erlaubten Abfragen der ODG-Schnittstelle gegenüber der Web-Oberfläche des
+    RIS?
+
+    Im Prinzip ist das Abfragen der Daten über die Schnittstellen mit der gleichen
+    Logik wie bei der Webseite des RIS aufgebaut. Eine Einschränkung gibt es
+    allerdings in Hinblick auf den *-Suchoperator. Derzeit kann bei der Suche über die
+    API lediglich ein Platzhalter pro Wort verwendet werden. Eine Ergänzung bzw.
+    Angleichung dieser Funktionalität ist in der Zukunft denkbar.
+
+
+
+
+    Wie kann über die Schnittstelle in Erfahrung gebracht werden, wann ein
+    Dokument (bzw. Gesetz) neu eingebracht, geändert oder gelöscht wurde?
+
+    Bitte verwenden Sie die "Historyabfrage", um Änderungen im Datenbestand
+    festzustellen. Sie müssen hierfür daher nicht immer den kompletten
+    Datenbestand einer Applikation „herunterladen“.
+
+
+
+
+    Warum gibt es manchmal Unterschiede bei den Ergebnissen einer
+    Gesamtabfrage bei Applikationen der Justiz, wie bspw. VwGH?
+
+    Diese Diskrepanz zwischen den beiden Ergebnissen ist dadurch bedingt, dass bei
+    der Gesamtabfrage über die Weboberfläche sowohl die Rechtssätze als auch die
+    Entscheidungstexte zurück geliefert werden, während es bei der Gesamtabfrage
+    über die OGD-SOAP-Schnittstelle lediglich die Rechtssätze sind.
+
+    Sollen über die OGD-SOAP-Schnittstelle alle Dokumente abgefragt werden, sind
+    daher die entsprechenden Werte bei den Parametern Rechtssätze und
+    Entscheidungstexte Ihrer Abfrage zu übergeben: D.h., „True“ bei
+    „SucheInRechtssaetzen“ und „SucheInEntscheidungstexten“.
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q                                               5 von 6
+     Was muss bei der Entwicklung einer App für Mobilgeräte beachtet werden?
+
+     Bitte wählen Sie die Bezeichnung Ihrer App in einer Form, die keinen
+     missverständlichen Zusammenhang zu den offiziellen Angeboten des Bundes
+     herstellt.
+
+     Die Nutzung der RIS Daten via OGD erfolgt gemäß der Namensnennung 4.0
+     International - Creative Commons
+     (https://creativecommons.org/licenses/by/4.0/deed.de); beachten Sie daher die
+     erforderliche Namensnennung.
+
+     Bitte nehmen Sie zur Kenntnis, dass aus der Verwendung der abgerufenen
+     Informationen und Schnittstellen keinerlei Rechtsansprüche abgeleitet werden
+     können.
+
+
+
+
+     Welche Kontaktadresse steht für andere, hier nicht berücksichtigte Fragen oder
+     weiterführende Informationen zur Verfügung?
+
+     Für allfällige weitere Anfragen zu den OGD-Schnittstellen oder technische Fragen
+     rund um das Rechtsinformationssystem des Bundes (RIS), verwenden Sie bitte
+     folgende E-Mail-Adresse: ris.it@bka.gv.at
+
+
+
+
+Erstellt von
+Bundeskanzleramt
+Abteilung VII/6: E-Government Bund/Verwaltung
+E-Mail: ris.it@bka.gv.at
+
+
+Erstellt am: 15. Juni 2026
+
+
+
+
+RIS - Open Government Data (OGD) F.A.Q                                                  6 von 6
+
