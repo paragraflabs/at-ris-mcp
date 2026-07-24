@@ -71,3 +71,43 @@ async def test_live_list_changes_bundesnormen():
     assert res.total > 0
     assert res.items
     assert res.items[0].id
+
+
+@_skip
+async def test_live_search_state_law_bundesland_filter():
+    from ris_client import StateLawSearchRequest
+
+    async with RisClient() as c:
+        res = await c.search_state_law(
+            StateLawSearchRequest(suchworte="Abfall", bundeslaender=["Kaernten"],
+                                  page_size="Ten")
+        )
+    assert res.total > 0
+    # the Bundesland filter must actually scope the results to Kärnten
+    assert {it.bundesland for it in res.items} == {"Kärnten"}
+
+
+@_skip
+async def test_live_search_misc_erlaesse():
+    from ris_client import MiscSearchRequest
+
+    async with RisClient() as c:
+        res = await c.search_misc(
+            MiscSearchRequest(suchworte="Steuer", applikation="Erlaesse",
+                              page_size="Ten")
+        )
+    assert res.total >= 0
+    assert res.request_url.endswith("Seitennummer=1") or "Sonstige" in res.request_url
+
+
+@_skip
+async def test_live_search_municipality():
+    from ris_client import MunicipalitySearchRequest
+
+    async with RisClient() as c:
+        res = await c.search_municipality(
+            MunicipalitySearchRequest(bundesland="Kaernten",
+                                      geaendert_seit="EinemJahr", page_size="Ten")
+        )
+    assert res.total > 0
+    assert res.items[0].gemeinde

@@ -23,20 +23,29 @@ from .errors import (
     UpstreamError,
 )
 from .models import (
+    Bundesland,
     CaseRecord,
     CaseSearchRequest,
     ChangeRecord,
     ChangeSetInterval,
     ChangesResult,
     CourtApplikation,
+    DistrictApplikation,
+    DistrictSearchRequest,
     HistoryApplikation,
     HistoryRequest,
     LawApplikation,
     LawRecord,
     LawSearchRequest,
+    MiscApplikation,
+    MiscSearchRequest,
+    MunicipalityApplikation,
+    MunicipalitySearchRequest,
     PageSize,
     SearchResult,
     SortDirection,
+    StateLawApplikation,
+    StateLawSearchRequest,
     TextFormat,
     TextResult,
 )
@@ -48,6 +57,10 @@ __all__ = [
     "LawSearchRequest",
     "CaseSearchRequest",
     "HistoryRequest",
+    "StateLawSearchRequest",
+    "MiscSearchRequest",
+    "DistrictSearchRequest",
+    "MunicipalitySearchRequest",
     "LawRecord",
     "CaseRecord",
     "ChangeRecord",
@@ -59,19 +72,22 @@ __all__ = [
     "ChangeSetInterval",
     "NormabschnittTyp",
     "SortDirection",
+    "Bundesland",
     "LawApplikation",
     "CourtApplikation",
     "HistoryApplikation",
-    "RisError",
-    "InvalidArgError",
-    "NotFoundError",
-    "UnsupportedFormatError",
-    "UpstreamError",
-    "NotImplementedYetError",
+    "StateLawApplikation",
+    "MiscApplikation",
+    "DistrictApplikation",
+    "MunicipalityApplikation",
     "list_collections",
     "search_law",
     "search_case",
     "search_changes",
+    "search_state_law",
+    "search_misc",
+    "search_district",
+    "search_municipality",
     "get_law_text",
     "get_case_text",
 ]
@@ -105,16 +121,39 @@ def list_collections() -> dict:
                 "Bundesrecht = 'Bundesnormen' (nicht 'BrKons'). "
                 "include_deleted verfügbar.",
             },
+            "Landesrecht": {
+                "covered": True,
+                "applikationen": [a.value for a in StateLawApplikation],
+                "default": StateLawApplikation.LrKons.value,
+                "note": "9 Bundesländer. LrKons wählt Länder über "
+                "bundeslaender=[...] (Bundesland.SucheIn<Land>-Flags).",
+            },
+            "Sonstige": {
+                "covered": True,
+                "applikationen": [a.value for a in MiscApplikation],
+                "default": MiscApplikation.Erlaesse.value,
+                "note": "Erlässe, Avsv, Spg, KmGer, ... Generische Filter; "
+                "app-spezifische Feinfilter folgen bei Bedarf.",
+            },
+            "Bezirke": {
+                "covered": True,
+                "applikationen": [a.value for a in DistrictApplikation],
+                "default": DistrictApplikation.Bvb.value,
+            },
+            "Gemeinden": {
+                "covered": True,
+                "applikationen": [a.value for a in MunicipalityApplikation],
+                "default": MunicipalityApplikation.Gr.value,
+            },
         },
         "not_yet_covered": {
-            "Landesrecht": "9 Bundesländer - Roadmap v0.3",
-            "Sonstige": "Erlässe, Avsv, ... - Roadmap v0.3",
-            "Bezirke/Gemeinden": "Roadmap v0.3",
+            "Sonstige (app-spezifische Feinfilter)": "z.B. Avsvnummer, "
+            "Spgnummer, Sitzungsnummer - Roadmap v1.0",
         },
         "attribution": "Quelle: RIS - Rechtsinformationssystem des Bundes "
         "(data.bka.gv.at), CC BY 4.0",
-        "dataset_note": "Landesrecht, Sonstige, Bezirke und Gemeinden sind noch "
-        "nicht abgedeckt.",
+        "dataset_note": "Bundesrecht, Landesrecht, Judikatur, Sonstige, Bezirke, "
+        "Gemeinden und der History-Änderungsfeed sind abgedeckt.",
     }
 
 
@@ -132,6 +171,26 @@ async def search_case(req: CaseSearchRequest, config: Config | None = None) -> S
 async def search_changes(req: HistoryRequest, config: Config | None = None) -> "ChangesResult":
     async with RisClient(config) as c:
         return await c.search_changes(req)
+
+
+async def search_state_law(req: StateLawSearchRequest, config: Config | None = None) -> SearchResult:
+    async with RisClient(config) as c:
+        return await c.search_state_law(req)
+
+
+async def search_misc(req: MiscSearchRequest, config: Config | None = None) -> SearchResult:
+    async with RisClient(config) as c:
+        return await c.search_misc(req)
+
+
+async def search_district(req: DistrictSearchRequest, config: Config | None = None) -> SearchResult:
+    async with RisClient(config) as c:
+        return await c.search_district(req)
+
+
+async def search_municipality(req: MunicipalitySearchRequest, config: Config | None = None) -> SearchResult:
+    async with RisClient(config) as c:
+        return await c.search_municipality(req)
 
 
 async def get_law_text(content_url: str, format: TextFormat | str = TextFormat.markdown,

@@ -6,8 +6,24 @@ reference/examples_get_post.txt (the authoritative parameter source).
 
 from urllib.parse import parse_qs, urlencode
 
-from ris_client.client import _build_case_params, _build_law_params, build_history_soap
-from ris_client.models import CaseSearchRequest, HistoryRequest, LawSearchRequest
+from ris_client.client import (
+    _build_case_params,
+    _build_district_params,
+    _build_law_params,
+    _build_misc_params,
+    _build_municipality_params,
+    _build_state_law_params,
+    build_history_soap,
+)
+from ris_client.models import (
+    CaseSearchRequest,
+    DistrictSearchRequest,
+    HistoryRequest,
+    LawSearchRequest,
+    MiscSearchRequest,
+    MunicipalitySearchRequest,
+    StateLawSearchRequest,
+)
 
 
 def _qs(params):
@@ -165,3 +181,80 @@ def test_history_invalid_application_rejected():
     from pydantic import ValidationError
     with pytest.raises(ValidationError):
         HistoryRequest(anwendung="NichtVorhanden")
+
+
+# --- v0.3: Landesrecht / Sonstige / Bezirke / Gemeinden -------------------
+def test_state_law_bundesland_flags_dotted():
+    # LrKons requires the dotted Bundesland.SucheIn<Land> form (verified live:
+    # the flat form is silently ignored by the API).
+    p = _build_state_law_params(
+        StateLawSearchRequest(suchworte="Abfall",
+                              bundeslaender=["Kaernten", "Tirol"])
+    )
+    d = dict(p)
+    assert d["Applikation"] == "LrKons"
+    assert d["Bundesland.SucheInKaernten"] == "true"
+    assert d["Bundesland.SucheInTirol"] == "true"
+    assert "SucheInKaernten" not in d  # not the flat form
+
+
+def test_state_law_abschnitt_and_fassung():
+    p = _build_state_law_params(
+        StateLawSearchRequest(titel="K-AWO", paragraph="38-40",
+                              fassung_vom="2004-04-01")
+    )
+    d = dict(p)
+    assert d["Abschnitt.Typ"] == "Paragraph"
+    assert d["Abschnitt.Von"] == "38"
+    assert d["Abschnitt.Bis"] == "40"
+    assert d["Fassung.FassungVom"] == "2004-04-01"
+
+
+def test_misc_erlaesse_params():
+    p = _build_misc_params(
+        MiscSearchRequest(suchworte="Delikten", applikation="Erlaesse",
+                          bundesministerium="Bundesministerium für Justiz",
+                          norm="StPO §172", fassung_vom="2021-11-12")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Erlaesse"
+    assert d["Bundesministerium"] == "Bundesministerium für Justiz"
+    assert d["Norm"] == "StPO §172"
+    assert d["FassungVom"] == "2021-11-12"
+
+
+def test_district_bvb_params():
+    p = _build_district_params(
+        DistrictSearchRequest(suchworte="Hochinzidenz", bundesland="Niederoesterreich",
+                             kundmachungsnummer="1/2021",
+                             kundmachung_von="2021-11-01", kundmachung_bis="2021-11-05")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Bvb"
+    assert d["Bundesland"] == "Niederoesterreich"
+    assert d["Kundmachungsnummer"] == "1/2021"
+    assert d["Kundmachungsdatum.Von"] == "2021-11-01"
+    assert d["Kundmachungsdatum.Bis"] == "2021-11-05"
+
+
+def test_municipality_gr_params():
+    p = _build_municipality_params(
+        MunicipalitySearchRequest(suchworte="plan", applikation="Gr",
+                                 bundesland="Kaernten", gemeinde="Afritz am See",
+                                 fassung_vom="2021-11-05")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Gr"
+    assert d["Bundesland"] == "Kaernten"
+    assert d["Gemeinde"] == "Afritz am See"
+    assert d["FassungVom"] == "2021-11-05"
+
+
+def test_municipality_gra_kundmachung():
+    p = _build_municipality_params(
+        MunicipalitySearchRequest(suchworte="Widmung", applikation="GrA",
+                                 kundmachung_von="2023-11-01", kundmachung_bis="2023-11-07")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "GrA"
+    assert d["Kundmachungsdatum.Von"] == "2023-11-01"

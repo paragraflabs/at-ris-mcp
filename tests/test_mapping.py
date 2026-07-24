@@ -163,3 +163,37 @@ def test_soap_fault_yields_empty_envelope():
     env = mapping.soap_body_to_envelope(fault)
     results, refs = mapping.iter_references(env)
     assert refs == []
+
+
+# --- v0.3: generic law mapping across endpoints ---------------------------
+@pytest.mark.parametrize("fixture,applikation,id_prefix", [
+    ("lrkons_search.json", "LrKons", "LNO"),
+    ("erlaesse_search.json", "Erlaesse", "ERL"),
+    ("bvb_search.json", "Bvb", "BVB"),
+    ("gr_search.json", "Gr", "GEMRE"),
+])
+def test_map_law_record_across_endpoints(fixture, applikation, id_prefix):
+    env = json.loads((FIX / fixture).read_text(encoding="utf-8"))
+    _, refs = mapping.iter_references(env)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.applikation == applikation
+    assert rec.id.startswith(id_prefix)
+    assert rec.kurztitel or rec.titel
+    assert rec.source_url
+
+
+def test_map_lrkons_has_bundesland_and_abschnitt():
+    env = json.loads((FIX / "lrkons_search.json").read_text(encoding="utf-8"))
+    _, refs = mapping.iter_references(env)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.bundesland  # e.g. "Niederösterreich"
+    assert rec.abschnitt and rec.abschnitt.startswith("§")
+
+
+def test_map_gemeinde_has_gemeinde_and_geschaeftszahl():
+    env = json.loads((FIX / "gr_search.json").read_text(encoding="utf-8"))
+    _, refs = mapping.iter_references(env)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.bundesland
+    assert rec.gemeinde
+    assert rec.geschaeftszahl

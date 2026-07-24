@@ -11,7 +11,7 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 DEFAULT_BASE_URL = "https://data.bka.gv.at/ris/api/v2.6"
 # The OGD SOAP endpoint (used for the History/Änderungen query, which is not

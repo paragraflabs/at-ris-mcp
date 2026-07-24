@@ -51,6 +51,10 @@ python -m ris_mcp
 | `ris_get_law_text` | Full text of a statute/section (markdown \| html \| xml \| raw). |
 | `ris_search_case` | Search Judikatur (default `Justiz`; all courts). Filter by applied `norm`. |
 | `ris_get_case_text` | Full text of a decision. |
+| `ris_search_state_law` | Search Landesrecht (9 Bundesländer; default `LrKons`). Select states via `bundeslaender`. |
+| `ris_search_misc` | Search `Sonstige` (ministerial decrees `Erlaesse`, `Avsv`, …). |
+| `ris_search_district` | Search district authority notices (`Bezirke` / `Bvb`). |
+| `ris_search_municipality` | Search municipal law (`Gemeinden` / Gemeinderecht `Gr`/`GrA`). |
 | `ris_list_collections` | Which endpoints/applications are covered. |
 | `ris_list_changes` | Change/early-warning feed (RIS History) via the OGD SOAP endpoint, incl. deleted documents. |
 
@@ -105,12 +109,18 @@ announced to `ris.it@bka.gv.at`. A descriptive User-Agent is sent by default.
   Consolidated law and all other documents are for information only. Every
   response carries a `legal_notice` to that effect.
 
-## Scope (v0.2)
+## Scope (v0.3)
 
 Covered: `Bundesrecht` (`BrKons`, `BgblAuth`, `BgblPdf`, `BgblAlt`, `Begut`,
-`RegV`, `Erv`), `Judikatur` (all courts) and the **History change-feed**
-(`ris_list_changes`, incl. deleted documents). **Not yet covered:** Landesrecht,
-Sonstige, Bezirke and Gemeinden — see the roadmap in `PLAN.md`.
+`RegV`, `Erv`), `Judikatur` (all courts), the **History change-feed**
+(`ris_list_changes`, incl. deleted documents), **Landesrecht** (9 Bundesländer:
+`LrKons`, `LgblAuth`, `Lgbl`, `LgblNO`, `Vbl`), **Sonstige** (`Erlaesse`,
+`Avsv`, `Spg`, `KmGer`, …), **Bezirke** (`Bvb`) and **Gemeinden** (`Gr`, `GrA`).
+
+> **State-law note:** for consolidated state law (`LrKons`), select the states
+> via `bundeslaender` (e.g. `["Kaernten","Tirol"]`); this maps to the dotted
+> `Bundesland.SucheIn<Land>=true` flags the API requires (the flat form is
+> silently ignored for `LrKons`).
 
 > **History note:** consolidated federal law is monitored under the application
 > name `Bundesnormen` (not `BrKons`), consolidated state law under

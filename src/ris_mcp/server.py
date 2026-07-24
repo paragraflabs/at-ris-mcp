@@ -16,10 +16,14 @@ from fastmcp import FastMCP
 from ris_client import (
     CaseSearchRequest,
     Config,
+    DistrictSearchRequest,
     HistoryRequest,
     LawSearchRequest,
+    MiscSearchRequest,
+    MunicipalitySearchRequest,
     RisClient,
     RisError,
+    StateLawSearchRequest,
     __version__,
     list_collections as _list_collections,
 )
@@ -200,6 +204,165 @@ async def ris_get_case_text(
                 citation=human_readable_citation, ecli=ecli,
             )
         _audit("ris_get_case_text", {"content_url": content_url, "format": format}, None)
+        return res.model_dump()
+    except Exception as exc:
+        return _err(exc)
+
+
+@mcp.tool
+async def ris_search_state_law(
+    suchworte: str | None = None,
+    titel: str | None = None,
+    applikation: str = "LrKons",
+    bundeslaender: str | None = None,
+    paragraph: str | None = None,
+    artikel: str | None = None,
+    anlage: str | None = None,
+    fassung_vom: str | None = None,
+    in_kraft_von: str | None = None,
+    in_kraft_bis: str | None = None,
+    geaendert_seit: str | None = None,
+    gesetzesnummer: str | None = None,
+    index: str | None = None,
+    typ: str | None = None,
+    kundmachungsorgan: str | None = None,
+    page_size: str = "Twenty",
+    page_number: int = 1,
+) -> dict[str, Any]:
+    """Search Austrian state law (Landesrecht) of the nine Bundesländer.
+
+    applikation: LrKons (consolidated state law, default) | LgblAuth | Lgbl |
+    LgblNO | Vbl. bundeslaender: comma-separated list of states to search
+    (LrKons), e.g. "Kaernten,Tirol" (values: Burgenland, Kaernten,
+    Niederoesterreich, Oberoesterreich, Salzburg, Steiermark, Tirol,
+    Vorarlberg, Wien). paragraph/artikel/anlage="N" or "N-M" for section
+    access, fassung_vom=YYYY-MM-DD for a historical snapshot.
+    """
+    try:
+        laender = [s.strip() for s in bundeslaender.split(",")] if bundeslaender else []
+        req = StateLawSearchRequest(
+            suchworte=suchworte, titel=titel, applikation=applikation,
+            bundeslaender=laender, paragraph=paragraph, artikel=artikel,
+            anlage=anlage, fassung_vom=fassung_vom, in_kraft_von=in_kraft_von,
+            in_kraft_bis=in_kraft_bis, geaendert_seit=geaendert_seit,
+            gesetzesnummer=gesetzesnummer, index=index, typ=typ,
+            kundmachungsorgan=kundmachungsorgan,
+            page_size=page_size, page_number=page_number,
+        )
+        async with RisClient(_config) as c:
+            res = await c.search_state_law(req)
+        _audit("ris_search_state_law", req.model_dump(), res.total)
+        return res.model_dump()
+    except Exception as exc:
+        return _err(exc)
+
+
+@mcp.tool
+async def ris_search_misc(
+    suchworte: str | None = None,
+    titel: str | None = None,
+    applikation: str = "Erlaesse",
+    geschaeftszahl: str | None = None,
+    norm: str | None = None,
+    bundesministerium: str | None = None,
+    fassung_vom: str | None = None,
+    geaendert_seit: str | None = None,
+    page_size: str = "Twenty",
+    page_number: int = 1,
+) -> dict[str, Any]:
+    """Search 'Sonstige' RIS collections (ministerial decrees etc.).
+
+    applikation: Erlaesse (ministerial decrees, default) | Avsv | Avn | Spg |
+    KmGer | Upts | Mrp | PruefGewO. geschaeftszahl, norm and bundesministerium
+    mainly apply to Erlaesse. Each hit carries source_url and content_urls.
+    """
+    try:
+        req = MiscSearchRequest(
+            suchworte=suchworte, titel=titel, applikation=applikation,
+            geschaeftszahl=geschaeftszahl, norm=norm,
+            bundesministerium=bundesministerium, fassung_vom=fassung_vom,
+            geaendert_seit=geaendert_seit,
+            page_size=page_size, page_number=page_number,
+        )
+        async with RisClient(_config) as c:
+            res = await c.search_misc(req)
+        _audit("ris_search_misc", req.model_dump(), res.total)
+        return res.model_dump()
+    except Exception as exc:
+        return _err(exc)
+
+
+@mcp.tool
+async def ris_search_district(
+    suchworte: str | None = None,
+    titel: str | None = None,
+    bundesland: str | None = None,
+    bezirksverwaltungsbehoerde: str | None = None,
+    kundmachungsnummer: str | None = None,
+    kundmachung_von: str | None = None,
+    kundmachung_bis: str | None = None,
+    geaendert_seit: str | None = None,
+    page_size: str = "Twenty",
+    page_number: int = 1,
+) -> dict[str, Any]:
+    """Search district authority notices (Bezirke / Bvb).
+
+    bundesland: one of Burgenland, Kaernten, Niederoesterreich,
+    Oberoesterreich, Salzburg, Steiermark, Tirol, Vorarlberg, Wien.
+    kundmachung_von/bis are YYYY-MM-DD dates. Each hit carries source_url and
+    content_urls (some notices are PDF-only).
+    """
+    try:
+        req = DistrictSearchRequest(
+            suchworte=suchworte, titel=titel, bundesland=bundesland,
+            bezirksverwaltungsbehoerde=bezirksverwaltungsbehoerde,
+            kundmachungsnummer=kundmachungsnummer,
+            kundmachung_von=kundmachung_von, kundmachung_bis=kundmachung_bis,
+            geaendert_seit=geaendert_seit,
+            page_size=page_size, page_number=page_number,
+        )
+        async with RisClient(_config) as c:
+            res = await c.search_district(req)
+        _audit("ris_search_district", req.model_dump(), res.total)
+        return res.model_dump()
+    except Exception as exc:
+        return _err(exc)
+
+
+@mcp.tool
+async def ris_search_municipality(
+    suchworte: str | None = None,
+    titel: str | None = None,
+    applikation: str = "Gr",
+    bundesland: str | None = None,
+    gemeinde: str | None = None,
+    geschaeftszahl: str | None = None,
+    fassung_vom: str | None = None,
+    kundmachung_von: str | None = None,
+    kundmachung_bis: str | None = None,
+    geaendert_seit: str | None = None,
+    page_size: str = "Twenty",
+    page_number: int = 1,
+) -> dict[str, Any]:
+    """Search municipal law (Gemeinden / Gemeinderecht).
+
+    applikation: Gr (Gemeinderecht, default) | GrA (authentic). bundesland: one
+    of the nine states (see ris_search_district). gemeinde: municipality name.
+    fassung_vom (Gr) for a historical snapshot; kundmachung_von/bis (GrA) filter
+    by promulgation date. Each hit carries source_url and content_urls.
+    """
+    try:
+        req = MunicipalitySearchRequest(
+            suchworte=suchworte, titel=titel, applikation=applikation,
+            bundesland=bundesland, gemeinde=gemeinde,
+            geschaeftszahl=geschaeftszahl, fassung_vom=fassung_vom,
+            kundmachung_von=kundmachung_von, kundmachung_bis=kundmachung_bis,
+            geaendert_seit=geaendert_seit,
+            page_size=page_size, page_number=page_number,
+        )
+        async with RisClient(_config) as c:
+            res = await c.search_municipality(req)
+        _audit("ris_search_municipality", req.model_dump(), res.total)
         return res.model_dump()
     except Exception as exc:
         return _err(exc)

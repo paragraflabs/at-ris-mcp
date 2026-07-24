@@ -87,35 +87,57 @@ def iter_references(envelope: dict[str, Any]) -> tuple[dict[str, Any], list[dict
     return results, [r for r in refs if isinstance(r, dict)]
 
 
+_LAW_CATEGORIES = ("Bundesrecht", "Landesrecht", "Sonstige", "Bezirke", "Gemeinden")
+
+
 def map_law_record(reference: dict[str, Any]) -> LawRecord:
+    """Flatten a law-like reference into a LawRecord.
+
+    Works across all law endpoints; the metadata category differs per endpoint
+    (Bundesrecht, Landesrecht, Sonstige, Bezirke, Gemeinden) but the inner
+    structure (Kurztitel + one nested application sub-block) is analogous.
+    """
     data = reference.get("Data", {})
     meta = data.get("Metadaten", {})
     tech = meta.get("Technisch", {})
     allg = meta.get("Allgemein", {})
-    br = meta.get("Bundesrecht", {})
-    # The sub-application block (BrKons/BgblAuth/...) holds the detail fields.
+
+    # Locate the category block (e.g. Metadaten.Landesrecht).
+    cat: dict[str, Any] = {}
+    for name in _LAW_CATEGORIES:
+        if isinstance(meta.get(name), dict):
+            cat = meta[name]
+            break
+
+    # The nested application sub-block (BrKons/LrKons/Erlaesse/Bvb/Gr/...) holds
+    # the detail fields. Skip scalar/known-container keys.
+    _skip = ("Kurztitel", "Titel", "Eli", "Bundesland", "Gemeinde",
+             "Geschaeftszahl", "Typ")
     sub: dict[str, Any] = {}
-    for key, val in br.items():
-        if isinstance(val, dict) and key not in ("Kurztitel", "Eli"):
+    for key, val in cat.items():
+        if isinstance(val, dict) and key not in _skip:
             sub = val
             break
 
     doc_id = _text(tech.get("ID")) or ""
-    kundm = _text(sub.get("Kundmachungsorgan"))
+    kundm = _text(sub.get("Kundmachungsorgan")) or _text(cat.get("Kundmachungsorgan"))
     return LawRecord(
         id=doc_id,
         applikation=_text(tech.get("Applikation")),
-        kurztitel=_text(br.get("Kurztitel")),
-        titel=_text(br.get("Kurztitel")),
-        typ=_text(sub.get("Typ")),
+        kurztitel=_text(cat.get("Kurztitel")),
+        titel=_text(cat.get("Titel")) or _text(cat.get("Kurztitel")),
+        typ=_text(sub.get("Typ")) or _text(cat.get("Typ")),
         abschnitt=_text(sub.get("ArtikelParagraphAnlage")),
+        bundesland=_text(cat.get("Bundesland")),
+        gemeinde=_text(cat.get("Gemeinde")),
+        geschaeftszahl=_text(cat.get("Geschaeftszahl")),
         kundmachungsorgan=kundm,
         bgblnummer=_text(sub.get("StammnormBgblnummer")),
         gesetzesnummer=_text(sub.get("Gesetzesnummer")),
         inkrafttreten=_text(sub.get("Inkrafttretensdatum")),
         ausserkrafttreten=_text(sub.get("Ausserkrafttretensdatum")),
         geaendert=_text(allg.get("Geaendert")),
-        eli_uri=_text(br.get("Eli")) or _text(allg.get("DokumentUrl")),
+        eli_uri=_text(cat.get("Eli")) or _text(allg.get("DokumentUrl")),
         source_url=_text(allg.get("DokumentUrl")),
         content_urls=_content_urls(data),
     )
@@ -203,12 +225,17 @@ def map_change_record(reference: dict[str, Any]) -> ChangeRecord:
     meta = data.get("Metadaten", {})
     tech = meta.get("Technisch", {})
     allg = meta.get("Allgemein", {})
-    br = meta.get("Bundesrecht", {})
     jud = meta.get("Judikatur", {})
+    # Any law-like category (Bundesrecht/Landesrecht/Sonstige/...).
+    cat: dict[str, Any] = {}
+    for name in _LAW_CATEGORIES:
+        if isinstance(meta.get(name), dict):
+            cat = meta[name]
+            break
 
     titel = (
-        _text(br.get("Kurztitel"))
-        or _text(br.get("Titel"))
+        _text(cat.get("Kurztitel"))
+        or _text(cat.get("Titel"))
         or _text(jud.get("Geschaeftszahl"))
     )
     urls = _content_urls(data)
@@ -222,7 +249,7 @@ def map_change_record(reference: dict[str, Any]) -> ChangeRecord:
         # request flag and exposes no explicit deletion marker; a reference
         # without any retrievable document is treated as deleted.
         deleted=not urls,
-        eli_uri=_text(br.get("Eli")) or _text(allg.get("DokumentUrl")),
+        eli_uri=_text(cat.get("Eli")) or _text(allg.get("DokumentUrl")),
         source_url=_text(allg.get("DokumentUrl")),
         content_urls=urls,
     )

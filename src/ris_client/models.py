@@ -83,6 +83,58 @@ class TextFormat(str, Enum):
     raw = "raw"  # unaltered original text (of whatever content_url points at)
 
 
+class StateLawApplikation(str, Enum):
+    """Landesrecht sub-applications (OGD_Landesrecht_Request.xsd)."""
+
+    LrKons = "LrKons"       # konsolidiertes Landesrecht (default)
+    LgblAuth = "LgblAuth"   # Landesgesetzblätter authentisch
+    Lgbl = "Lgbl"           # Landesgesetzblätter (nicht authentisch)
+    LgblNO = "LgblNO"       # Niederösterreich bis 2014
+    Vbl = "Vbl"             # Verordnungsblätter der Länder
+
+
+class MiscApplikation(str, Enum):
+    """Sonstige applications (OGD_Sonstige_Request.xsd). v0.3 exposes the
+    generic ones; app-specific narrow filters can be added later."""
+
+    Erlaesse = "Erlaesse"   # Erlässe der Bundesministerien
+    Avsv = "Avsv"           # Amtl. Verlautbarungen der Sozialversicherung
+    Avn = "Avn"             # Amtliche Veterinärnachrichten
+    Spg = "Spg"             # Strukturpläne Gesundheit
+    KmGer = "KmGer"         # Kundmachungen der Gerichte
+    Upts = "Upts"           # Unabh. Parteien-Transparenz-Senat
+    Mrp = "Mrp"             # Ministerratsprotokolle
+    PruefGewO = "PruefGewO" # Prüfungsordnungen GewO
+
+
+class DistrictApplikation(str, Enum):
+    """Bezirke applications (OGD_Bezirke_Request.xsd)."""
+
+    Bvb = "Bvb"             # Kundmachungen der Bezirksverwaltungsbehörden
+
+
+class MunicipalityApplikation(str, Enum):
+    """Gemeinden applications (OGD_Gemeinden_Request.xsd)."""
+
+    Gr = "Gr"               # Gemeinderecht
+    GrA = "GrA"             # Gemeinderecht authentisch
+
+
+class Bundesland(str, Enum):
+    """The nine Austrian states, as used by the ``Bundesland`` scalar filter
+    (Bezirke/Gemeinden) - values verbatim from OGD_Request_Types.xsd."""
+
+    Burgenland = "Burgenland"
+    Kaernten = "Kaernten"
+    Niederoesterreich = "Niederoesterreich"
+    Oberoesterreich = "Oberoesterreich"
+    Salzburg = "Salzburg"
+    Steiermark = "Steiermark"
+    Tirol = "Tirol"
+    Vorarlberg = "Vorarlberg"
+    Wien = "Wien"
+
+
 class HistoryApplikation(str, Enum):
     """Applications valid for the History (Änderungen) query.
 
@@ -195,6 +247,86 @@ class HistoryRequest(BaseModel):
     page_number: int = 1
 
 
+class StateLawSearchRequest(BaseModel):
+    """Landesrecht search (endpoint /Landesrecht)."""
+
+    model_config = ConfigDict(use_enum_values=True)
+
+    suchworte: str | None = None
+    titel: str | None = None
+    applikation: StateLawApplikation = StateLawApplikation.LrKons.value
+    # LrKons uses per-state boolean flags (Bundesland.SucheIn<Land>=true).
+    bundeslaender: list[Bundesland] = Field(default_factory=list)
+    paragraph: str | None = None
+    artikel: str | None = None
+    anlage: str | None = None
+    fassung_vom: str | None = None
+    in_kraft_von: str | None = None
+    in_kraft_bis: str | None = None
+    geaendert_seit: ChangeSetInterval | None = None
+    gesetzesnummer: str | None = None
+    index: str | None = None
+    typ: str | None = None
+    kundmachungsorgan: str | None = None
+    page_size: PageSize = PageSize.Twenty.value
+    page_number: int = 1
+
+
+class MiscSearchRequest(BaseModel):
+    """Sonstige search (endpoint /Sonstige): Erlässe, Avsv, ..."""
+
+    model_config = ConfigDict(use_enum_values=True)
+
+    suchworte: str | None = None
+    titel: str | None = None
+    applikation: MiscApplikation = MiscApplikation.Erlaesse.value
+    # Common-ish filters (mainly Erlaesse).
+    geschaeftszahl: str | None = None
+    norm: str | None = None
+    bundesministerium: str | None = None
+    fassung_vom: str | None = None
+    geaendert_seit: ChangeSetInterval | None = None
+    page_size: PageSize = PageSize.Twenty.value
+    page_number: int = 1
+
+
+class DistrictSearchRequest(BaseModel):
+    """Bezirke search (endpoint /Bezirke): BVB-Kundmachungen."""
+
+    model_config = ConfigDict(use_enum_values=True)
+
+    suchworte: str | None = None
+    titel: str | None = None
+    applikation: DistrictApplikation = DistrictApplikation.Bvb.value
+    bundesland: Bundesland | None = None
+    bezirksverwaltungsbehoerde: str | None = None
+    kundmachungsnummer: str | None = None
+    kundmachung_von: str | None = None      # -> Kundmachungsdatum.Von
+    kundmachung_bis: str | None = None      # -> Kundmachungsdatum.Bis
+    geaendert_seit: ChangeSetInterval | None = None
+    page_size: PageSize = PageSize.Twenty.value
+    page_number: int = 1
+
+
+class MunicipalitySearchRequest(BaseModel):
+    """Gemeinden search (endpoint /Gemeinden): Gemeinderecht."""
+
+    model_config = ConfigDict(use_enum_values=True)
+
+    suchworte: str | None = None
+    titel: str | None = None
+    applikation: MunicipalityApplikation = MunicipalityApplikation.Gr.value
+    bundesland: Bundesland | None = None
+    gemeinde: str | None = None
+    geschaeftszahl: str | None = None
+    fassung_vom: str | None = None          # Gr -> FassungVom
+    kundmachung_von: str | None = None      # GrA -> Kundmachungsdatum.Von
+    kundmachung_bis: str | None = None      # GrA -> Kundmachungsdatum.Bis
+    geaendert_seit: ChangeSetInterval | None = None
+    page_size: PageSize = PageSize.Twenty.value
+    page_number: int = 1
+
+
 # ---------------------------------------------------------------------------
 # Flattened response records
 # ---------------------------------------------------------------------------
@@ -205,6 +337,9 @@ class LawRecord(BaseModel):
     titel: str | None = None
     typ: str | None = None
     abschnitt: str | None = None          # e.g. "§ 17"
+    bundesland: str | None = None         # Landesrecht/Bezirke/Gemeinden
+    gemeinde: str | None = None           # Gemeinden
+    geschaeftszahl: str | None = None     # Gemeinden/Erlaesse
     kundmachungsorgan: str | None = None
     bgblnummer: str | None = None
     gesetzesnummer: str | None = None

@@ -27,11 +27,15 @@ from .errors import (
 )
 from .models import (
     CaseSearchRequest,
+    DistrictSearchRequest,
     HistoryRequest,
     LawApplikation,
     LawSearchRequest,
+    MiscSearchRequest,
+    MunicipalitySearchRequest,
     SearchResult,
     ChangesResult,
+    StateLawSearchRequest,
     TextFormat,
     TextResult,
 )
@@ -128,6 +132,129 @@ def _build_case_params(req: CaseSearchRequest) -> list[tuple[str, str]]:
         p.append(("EntscheidungsdatumVon", req.entscheidung_von))
     if req.entscheidung_bis:
         p.append(("EntscheidungsdatumBis", req.entscheidung_bis))
+    if req.geaendert_seit:
+        p.append(("ImRisSeit", req.geaendert_seit))
+    p.append(("DokumenteProSeite", req.page_size))
+    p.append(("Seitennummer", str(req.page_number)))
+    return p
+
+
+def _add_abschnitt(p: list[tuple[str, str]], paragraph, artikel, anlage) -> None:
+    typ = val = None
+    if paragraph:
+        typ, val = "Paragraph", paragraph
+    elif artikel:
+        typ, val = "Artikel", artikel
+    elif anlage:
+        typ, val = "Anlage", anlage
+    if typ:
+        von, _, bis = val.partition("-")
+        p.append(("Abschnitt.Typ", typ))
+        p.append(("Abschnitt.Von", von.strip()))
+        p.append(("Abschnitt.Bis", (bis.strip() or von.strip())))
+
+
+def _build_state_law_params(req: StateLawSearchRequest) -> list[tuple[str, str]]:
+    """Landesrecht. LrKons selects states via Bundesland.SucheIn<Land>=true
+    flags (per OGD_Landesrecht_Request.xsd / official GET example)."""
+    p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    if req.suchworte:
+        p.append(("Suchworte", req.suchworte))
+    if req.titel:
+        p.append(("Titel", req.titel))
+    for land in req.bundeslaender:
+        # req uses use_enum_values=True -> land is a plain str.
+        # LrKons requires the dotted form (Bundesland.SucheIn<Land>=true);
+        # the flat form is silently ignored by the API for LrKons.
+        p.append((f"Bundesland.SucheIn{land}", "true"))
+    if req.index:
+        p.append(("Index", req.index))
+    if req.typ:
+        p.append(("Typ", req.typ))
+    _add_abschnitt(p, req.paragraph, req.artikel, req.anlage)
+    if req.fassung_vom:
+        p.append(("Fassung.FassungVom", req.fassung_vom))
+    else:
+        if req.in_kraft_von:
+            p.append(("Fassung.VonInkrafttretensdatum", req.in_kraft_von))
+        if req.in_kraft_bis:
+            p.append(("Fassung.BisInkrafttretensdatum", req.in_kraft_bis))
+    if req.geaendert_seit:
+        p.append(("ImRisSeit", req.geaendert_seit))
+    if req.gesetzesnummer:
+        p.append(("Gesetzesnummer", req.gesetzesnummer))
+    if req.kundmachungsorgan:
+        p.append(("Kundmachungsorgan", req.kundmachungsorgan))
+    p.append(("DokumenteProSeite", req.page_size))
+    p.append(("Seitennummer", str(req.page_number)))
+    return p
+
+
+def _build_misc_params(req: MiscSearchRequest) -> list[tuple[str, str]]:
+    """Sonstige (Erlässe etc.)."""
+    p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    if req.suchworte:
+        p.append(("Suchworte", req.suchworte))
+    if req.titel:
+        p.append(("Titel", req.titel))
+    if req.geschaeftszahl:
+        p.append(("Geschaeftszahl", req.geschaeftszahl))
+    if req.norm:
+        p.append(("Norm", req.norm))
+    if req.bundesministerium:
+        p.append(("Bundesministerium", req.bundesministerium))
+    if req.fassung_vom:
+        p.append(("FassungVom", req.fassung_vom))
+    if req.geaendert_seit:
+        p.append(("ImRisSeit", req.geaendert_seit))
+    p.append(("DokumenteProSeite", req.page_size))
+    p.append(("Seitennummer", str(req.page_number)))
+    return p
+
+
+def _build_district_params(req: DistrictSearchRequest) -> list[tuple[str, str]]:
+    """Bezirke (BVB-Kundmachungen)."""
+    p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    if req.suchworte:
+        p.append(("Suchworte", req.suchworte))
+    if req.titel:
+        p.append(("Titel", req.titel))
+    if req.bundesland:
+        p.append(("Bundesland", req.bundesland))
+    if req.bezirksverwaltungsbehoerde:
+        p.append(("Bezirksverwaltungsbehoerde", req.bezirksverwaltungsbehoerde))
+    if req.kundmachungsnummer:
+        p.append(("Kundmachungsnummer", req.kundmachungsnummer))
+    if req.kundmachung_von:
+        p.append(("Kundmachungsdatum.Von", req.kundmachung_von))
+    if req.kundmachung_bis:
+        p.append(("Kundmachungsdatum.Bis", req.kundmachung_bis))
+    if req.geaendert_seit:
+        p.append(("ImRisSeit", req.geaendert_seit))
+    p.append(("DokumenteProSeite", req.page_size))
+    p.append(("Seitennummer", str(req.page_number)))
+    return p
+
+
+def _build_municipality_params(req: MunicipalitySearchRequest) -> list[tuple[str, str]]:
+    """Gemeinden (Gemeinderecht Gr/GrA)."""
+    p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    if req.suchworte:
+        p.append(("Suchworte", req.suchworte))
+    if req.titel:
+        p.append(("Titel", req.titel))
+    if req.bundesland:
+        p.append(("Bundesland", req.bundesland))
+    if req.gemeinde:
+        p.append(("Gemeinde", req.gemeinde))
+    if req.geschaeftszahl:
+        p.append(("Geschaeftszahl", req.geschaeftszahl))
+    if req.fassung_vom:
+        p.append(("FassungVom", req.fassung_vom))
+    if req.kundmachung_von:
+        p.append(("Kundmachungsdatum.Von", req.kundmachung_von))
+    if req.kundmachung_bis:
+        p.append(("Kundmachungsdatum.Bis", req.kundmachung_bis))
     if req.geaendert_seit:
         p.append(("ImRisSeit", req.geaendert_seit))
     p.append(("DokumenteProSeite", req.page_size))
@@ -293,12 +420,17 @@ class RisClient:
                 "Provide at least one filter (suchworte, titel, gesetzesnummer, "
                 "index, fassung_vom or geaendert_seit)."
             )
-        params = _build_law_params(req)
+        return await self._law_search("Bundesrecht", _build_law_params(req),
+                                      req.page_number)
+
+    async def _law_search(self, endpoint: str, params: list[tuple[str, str]],
+                          page_number: int) -> SearchResult:
+        """Shared law-endpoint search: fetch, flatten, cite."""
         envelope, url = await self._get_json(
-            "Bundesrecht", params, self.config.cache_ttl_search_s
+            endpoint, params, self.config.cache_ttl_search_s
         )
         results, refs = mapping.iter_references(envelope)
-        total, page_number, page_size = mapping.parse_hits_total(results)
+        total, pnum, page_size = mapping.parse_hits_total(results)
         items = []
         for ref in refs:
             rec = mapping.map_law_record(ref)
@@ -308,13 +440,60 @@ class RisClient:
             items.append(rec)
         return SearchResult(
             total=total,
-            page_number=page_number or req.page_number,
+            page_number=pnum or page_number,
             page_size=page_size,
             items=items,
             request_url=url,
             attribution=citations.ATTRIBUTION,
             legal_notice=citations.LEGAL_NOTICE,
         )
+
+    # -- public: state law / misc / district / municipality ---------------
+    async def search_state_law(self, req: StateLawSearchRequest) -> SearchResult:
+        if not (req.suchworte or req.titel or req.gesetzesnummer
+                or req.geaendert_seit or req.fassung_vom or req.index
+                or req.bundeslaender):
+            raise InvalidArgError(
+                "Provide at least one filter (suchworte, titel, gesetzesnummer, "
+                "index, fassung_vom, geaendert_seit or bundeslaender)."
+            )
+        return await self._law_search("Landesrecht",
+                                      _build_state_law_params(req), req.page_number)
+
+    async def search_misc(self, req: MiscSearchRequest) -> SearchResult:
+        if not (req.suchworte or req.titel or req.geschaeftszahl
+                or req.norm or req.geaendert_seit or req.fassung_vom):
+            raise InvalidArgError(
+                "Provide at least one filter (suchworte, titel, geschaeftszahl, "
+                "norm, fassung_vom or geaendert_seit)."
+            )
+        return await self._law_search("Sonstige",
+                                      _build_misc_params(req), req.page_number)
+
+    async def search_district(self, req: DistrictSearchRequest) -> SearchResult:
+        if not (req.suchworte or req.titel or req.bundesland
+                or req.bezirksverwaltungsbehoerde or req.kundmachungsnummer
+                or req.kundmachung_von or req.geaendert_seit):
+            raise InvalidArgError(
+                "Provide at least one filter (suchworte, titel, bundesland, "
+                "bezirksverwaltungsbehoerde, kundmachungsnummer, "
+                "kundmachung_von or geaendert_seit)."
+            )
+        return await self._law_search("Bezirke",
+                                      _build_district_params(req), req.page_number)
+
+    async def search_municipality(self, req: MunicipalitySearchRequest) -> SearchResult:
+        if not (req.suchworte or req.titel or req.bundesland or req.gemeinde
+                or req.geschaeftszahl or req.fassung_vom or req.kundmachung_von
+                or req.geaendert_seit):
+            raise InvalidArgError(
+                "Provide at least one filter (suchworte, titel, bundesland, "
+                "gemeinde, geschaeftszahl, fassung_vom, kundmachung_von or "
+                "geaendert_seit)."
+            )
+        return await self._law_search("Gemeinden",
+                                      _build_municipality_params(req),
+                                      req.page_number)
 
     # -- public: search case ----------------------------------------------
     async def search_case(self, req: CaseSearchRequest) -> SearchResult:
