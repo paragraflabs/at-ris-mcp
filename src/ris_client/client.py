@@ -200,6 +200,33 @@ def _build_state_law_params(req: StateLawSearchRequest) -> list[tuple[str, str]]
         p.append(("Gesetzesnummer", req.gesetzesnummer))
     if req.kundmachungsorgan:
         p.append(("Kundmachungsorgan", req.kundmachungsorgan))
+    app = req.applikation
+    # LgblAuth / Lgbl (Landesgesetzblätter).
+    if req.lgblnummer and app in ("LgblAuth", "Lgbl"):
+        p.append(("Lgblnummer", req.lgblnummer))
+    if app in ("LgblAuth", "Lgbl"):
+        if req.kundmachung_von:
+            p.append(("Kundmachung.Von", req.kundmachung_von))
+        if req.kundmachung_bis:
+            p.append(("Kundmachung.Bis", req.kundmachung_bis))
+    # Vbl (Verordnungsblätter der Länder).
+    if req.einbringer and app == "Vbl":
+        p.append(("Einbringer", req.einbringer))
+    if req.kundmachungsnummer and app == "Vbl":
+        p.append(("Kundmachungsnummer", req.kundmachungsnummer))
+    if app == "Vbl":
+        if req.kundmachung_von:
+            p.append(("Kundmachungsdatum.Von", req.kundmachung_von))
+        if req.kundmachung_bis:
+            p.append(("Kundmachungsdatum.Bis", req.kundmachung_bis))
+    # LgblNO (Niederösterreich, nicht authentisch).
+    if req.gliederungszahl and app == "LgblNO":
+        p.append(("Gliederungszahl", req.gliederungszahl))
+    if app == "LgblNO":
+        if req.ausgabedatum_von:
+            p.append(("Ausgabedatum.Von", req.ausgabedatum_von))
+        if req.ausgabedatum_bis:
+            p.append(("Ausgabedatum.Bis", req.ausgabedatum_bis))
     p.append(("DokumenteProSeite", req.page_size))
     p.append(("Seitennummer", str(req.page_number)))
     return p
@@ -505,10 +532,13 @@ class RisClient:
     async def search_state_law(self, req: StateLawSearchRequest) -> SearchResult:
         if not (req.suchworte or req.titel or req.gesetzesnummer
                 or req.geaendert_seit or req.fassung_vom or req.index
-                or req.bundeslaender):
+                or req.bundeslaender or req.lgblnummer or req.gliederungszahl
+                or req.einbringer or req.kundmachungsnummer
+                or req.kundmachung_von or req.ausgabedatum_von):
             raise InvalidArgError(
                 "Provide at least one filter (suchworte, titel, gesetzesnummer, "
-                "index, fassung_vom, geaendert_seit or bundeslaender)."
+                "index, fassung_vom, geaendert_seit, bundeslaender, lgblnummer, "
+                "gliederungszahl or a date/number filter)."
             )
         return await self._law_search("Landesrecht",
                                       _build_state_law_params(req), req.page_number)

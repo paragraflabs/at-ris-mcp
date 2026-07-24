@@ -229,6 +229,14 @@ async def ris_search_state_law(
     index: str | None = None,
     typ: str | None = None,
     kundmachungsorgan: str | None = None,
+    lgblnummer: str | None = None,
+    kundmachung_von: str | None = None,
+    kundmachung_bis: str | None = None,
+    einbringer: str | None = None,
+    kundmachungsnummer: str | None = None,
+    gliederungszahl: str | None = None,
+    ausgabedatum_von: str | None = None,
+    ausgabedatum_bis: str | None = None,
     page_size: str = "Twenty",
     page_number: int = 1,
 ) -> dict[str, Any]:
@@ -239,7 +247,10 @@ async def ris_search_state_law(
     (LrKons), e.g. "Kaernten,Tirol" (values: Burgenland, Kaernten,
     Niederoesterreich, Oberoesterreich, Salzburg, Steiermark, Tirol,
     Vorarlberg, Wien). paragraph/artikel/anlage="N" or "N-M" for section
-    access, fassung_vom=YYYY-MM-DD for a historical snapshot.
+    access, fassung_vom=YYYY-MM-DD for a historical snapshot. App-specific:
+    lgblnummer + kundmachung_von/bis (LgblAuth/Lgbl); einbringer,
+    kundmachungsnummer + kundmachung_von/bis (Vbl); gliederungszahl +
+    ausgabedatum_von/bis (LgblNO).
     """
     try:
         laender = [s.strip() for s in bundeslaender.split(",")] if bundeslaender else []
@@ -250,6 +261,11 @@ async def ris_search_state_law(
             in_kraft_bis=in_kraft_bis, geaendert_seit=geaendert_seit,
             gesetzesnummer=gesetzesnummer, index=index, typ=typ,
             kundmachungsorgan=kundmachungsorgan,
+            lgblnummer=lgblnummer, kundmachung_von=kundmachung_von,
+            kundmachung_bis=kundmachung_bis, einbringer=einbringer,
+            kundmachungsnummer=kundmachungsnummer,
+            gliederungszahl=gliederungszahl,
+            ausgabedatum_von=ausgabedatum_von, ausgabedatum_bis=ausgabedatum_bis,
             page_size=page_size, page_number=page_number,
         )
         async with RisClient(_config) as c:

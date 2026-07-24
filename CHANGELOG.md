@@ -4,6 +4,23 @@ All notable changes to **at-ris-mcp** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2026-07-24
+
+### Added
+- **Landesrecht fine filters** on `ris_search_state_law`: `lgblnummer` +
+  `kundmachung_von`/`bis` (LgblAuth/Lgbl); `einbringer`, `kundmachungsnummer` +
+  `kundmachung_von`/`bis` (Vbl); `gliederungszahl` + `ausgabedatum_von`/`bis`
+  (LgblNO). Filters are only emitted for the relevant application and use the
+  correct per-app date base (`Kundmachung` vs `Kundmachungsdatum` vs
+  `Ausgabedatum`).
+
+### Changed
+- CI: bumped GitHub Actions to current majors (checkout v7, setup-python v7,
+  upload-artifact v7, download-artifact v8), removing the Node.js 20
+  deprecation warning.
+- Release: the MCP-registry workflow now auto-syncs `server.json` to the tag
+  version on tagged builds, so it can no longer drift.
+
 ## [1.0.0] - 2026-07-24
 
 ### Added

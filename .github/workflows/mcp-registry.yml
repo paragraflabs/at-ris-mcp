@@ -17,16 +17,23 @@ jobs:
       id-token: write   # required for OIDC
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Validate server.json version matches the tag
+      - name: Sync server.json version to the tag
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          JSON_VERSION="$(python3 -c 'import json;print(json.load(open("server.json"))["version"])')"
-          if [ "$TAG_VERSION" != "$JSON_VERSION" ]; then
-            echo "server.json version ($JSON_VERSION) != tag ($TAG_VERSION)"; exit 1
-          fi
+          python3 - "$TAG_VERSION" <<'PY'
+          import json, sys
+          v = sys.argv[1]
+          data = json.load(open("server.json"))
+          data["version"] = v
+          for pkg in data.get("packages", []):
+              pkg["version"] = v
+          json.dump(data, open("server.json", "w"), indent=2)
+          open("server.json", "a").write("\n")
+          print(f"server.json set to version {v}")
+          PY
 
       - name: Install mcp-publisher
         run: |

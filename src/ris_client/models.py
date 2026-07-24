@@ -271,6 +271,16 @@ class StateLawSearchRequest(BaseModel):
     index: str | None = None
     typ: str | None = None
     kundmachungsorgan: str | None = None
+    lgblnummer: str | None = None            # LgblAuth/Lgbl
+    kundmachung_von: str | None = None       # LgblAuth/Lgbl -> Kundmachung.Von
+    kundmachung_bis: str | None = None       # LgblAuth/Lgbl -> Kundmachung.Bis
+    # Vbl (Verordnungsblätter der Länder) specific.
+    einbringer: str | None = None            # Vbl
+    kundmachungsnummer: str | None = None     # Vbl
+    # LgblNO (Niederösterreich, nicht authentisch) specific.
+    gliederungszahl: str | None = None       # LgblNO
+    ausgabedatum_von: str | None = None      # LgblNO -> Ausgabedatum.Von
+    ausgabedatum_bis: str | None = None      # LgblNO -> Ausgabedatum.Bis
     page_size: PageSize = PageSize.Twenty.value
     page_number: int = 1
 

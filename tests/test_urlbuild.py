@@ -313,3 +313,59 @@ def test_misc_fine_filters_scoped_to_app():
                          avsvnummer="85/2016")
     )
     assert "Avsvnummer" not in dict(p)
+
+
+# --- v1.0.1: Landesrecht Vbl / LgblNO / LgblAuth fine filters -------------
+def test_state_law_vbl_params():
+    p = _build_state_law_params(
+        StateLawSearchRequest(applikation="Vbl", suchworte="Verordnung",
+                              einbringer="Landesregierung",
+                              kundmachungsnummer="1/2021",
+                              kundmachung_von="2021-11-01",
+                              kundmachung_bis="2021-11-05")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Vbl"
+    assert d["Einbringer"] == "Landesregierung"
+    assert d["Kundmachungsnummer"] == "1/2021"
+    # Vbl uses the Kundmachungsdatum date base
+    assert d["Kundmachungsdatum.Von"] == "2021-11-01"
+    assert d["Kundmachungsdatum.Bis"] == "2021-11-05"
+
+
+def test_state_law_lgblno_params():
+    p = _build_state_law_params(
+        StateLawSearchRequest(applikation="LgblNO", suchworte="Pflanz",
+                              gliederungszahl="6170/3-0",
+                              ausgabedatum_von="2020-01-01",
+                              ausgabedatum_bis="2020-12-31")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "LgblNO"
+    assert d["Gliederungszahl"] == "6170/3-0"
+    assert d["Ausgabedatum.Von"] == "2020-01-01"
+    assert d["Ausgabedatum.Bis"] == "2020-12-31"
+
+
+def test_state_law_lgblauth_uses_kundmachung_base():
+    p = _build_state_law_params(
+        StateLawSearchRequest(applikation="LgblAuth", suchworte="budget",
+                              lgblnummer="10/2018", kundmachung_von="2018-01-01")
+    )
+    d = dict(p)
+    assert d["Lgblnummer"] == "10/2018"
+    # LgblAuth uses the Kundmachung date base (not Kundmachungsdatum)
+    assert d["Kundmachung.Von"] == "2018-01-01"
+
+
+def test_state_law_fine_filters_scoped_to_app():
+    # Vbl/LgblNO fields must not leak into an LrKons request.
+    p = _build_state_law_params(
+        StateLawSearchRequest(applikation="LrKons", suchworte="x",
+                              einbringer="X", gliederungszahl="Y",
+                              lgblnummer="Z")
+    )
+    d = dict(p)
+    assert "Einbringer" not in d
+    assert "Gliederungszahl" not in d
+    assert "Lgblnummer" not in d
