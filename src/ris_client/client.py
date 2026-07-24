@@ -33,7 +33,7 @@ from .models import (
     TextResult,
 )
 from .ratelimit import RateLimiter
-from .textparse import html_to_markdown, to_markdown, xml_to_text
+from .textparse import extract_law_citation, html_to_markdown, to_markdown, xml_to_text
 
 _RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
@@ -284,13 +284,13 @@ class RisClient:
     async def get_text(
         self,
         content_url: str,
-        fmt: TextFormat | str = TextFormat.markdown,
+        format: TextFormat | str = TextFormat.markdown,
         *,
         citation: str | None = None,
         eli_uri: str | None = None,
         ecli: str | None = None,
     ) -> TextResult:
-        fmt = TextFormat(fmt) if not isinstance(fmt, TextFormat) else fmt
+        fmt = TextFormat(format) if not isinstance(format, TextFormat) else format
         url = self._validate_content_url(content_url)
         cache_key = "text:" + hashlib.sha256(url.encode()).hexdigest()
         raw = self._cache.get(cache_key)
@@ -304,6 +304,12 @@ class RisClient:
         else:  # markdown
             content = to_markdown(raw, url)
             out_format = "markdown"
+
+        # If the caller did not pass a citation, derive one from the HTML law
+        # document (Kurztitel + § + Kundmachungsorgan) so the response stays
+        # citable even when the search hit was not threaded through.
+        if not citation and url.lower().endswith(".html"):
+            citation = extract_law_citation(raw)
 
         return TextResult(
             content=content,

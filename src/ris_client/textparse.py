@@ -83,3 +83,41 @@ def to_markdown(content: str, source_url: str) -> str:
     if lower.endswith(".xml"):
         return xml_to_text(content)
     return html_to_markdown(content)
+
+
+def extract_law_citation(html: str) -> str | None:
+    """Best-effort human-readable citation from a RIS law HTML document.
+
+    RIS renders labelled contentBlocks ("Kurztitel", "Kundmachungsorgan",
+    "§/Artikel/Anlage"). We stitch those into
+    "<Kurztitel> <§>, <Kundmachungsorgan>". Returns None if nothing usable.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    _clean_soup(soup)
+    fields: dict[str, str] = {}
+    for block in soup.select("div.contentBlock"):
+        heading = block.find(["h1", "h2", "h3"])
+        if not heading:
+            continue
+        label = _text_of(heading)
+        heading.extract()
+        value = _text_of(block)
+        if label and value:
+            fields[label] = value
+
+    kurztitel = fields.get("Kurztitel") or fields.get("Titel")
+    kundm = fields.get("Kundmachungsorgan")
+    abschnitt = None
+    for key, val in fields.items():
+        if "Artikel" in key or "Anlage" in key or key.startswith("§"):
+            abschnitt = val
+            break
+
+    parts: list[str] = []
+    if kurztitel:
+        parts.append(f"{kurztitel} {abschnitt}" if abschnitt else kurztitel)
+    elif abschnitt:
+        parts.append(abschnitt)
+    if kundm:
+        parts.append(kundm)
+    return ", ".join(parts) if parts else None

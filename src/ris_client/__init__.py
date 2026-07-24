@@ -112,13 +112,19 @@ async def search_case(req: CaseSearchRequest, config: Config | None = None) -> S
         return await c.search_case(req)
 
 
-async def get_law_text(content_url: str, fmt: TextFormat | str = TextFormat.markdown,
-                       config: Config | None = None, **kw) -> TextResult:
+async def get_law_text(content_url: str, format: TextFormat | str = TextFormat.markdown,
+                       config: Config | None = None, *,
+                       citation: str | None = None, eli_uri: str | None = None,
+                       ecli: str | None = None) -> TextResult:
     async with RisClient(config) as c:
-        return await c.get_text(content_url, fmt, **kw)
+        return await c.get_text(content_url, format, citation=citation,
+                                eli_uri=eli_uri, ecli=ecli)
 
 
-async def get_case_text(content_url: str, fmt: TextFormat | str = TextFormat.markdown,
-                        config: Config | None = None, **kw) -> TextResult:
+async def get_case_text(content_url: str, format: TextFormat | str = TextFormat.markdown,
+                        config: Config | None = None, *,
+                        citation: str | None = None, eli_uri: str | None = None,
+                        ecli: str | None = None) -> TextResult:
     async with RisClient(config) as c:
-        return await c.get_text(content_url, fmt, **kw)
+        return await c.get_text(content_url, format, citation=citation,
+                                eli_uri=eli_uri, ecli=ecli)

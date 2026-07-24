@@ -115,3 +115,41 @@ async def test_get_text_markdown_default(cfg):
     assert res.format == "markdown"
     assert "Hallo Welt" in res.content
     assert "<html" not in res.content
+
+
+@respx.mock
+async def test_get_text_fills_citation_from_html(cfg):
+    html = (
+        "<html><body><div class='paperw'>"
+        "<div class='contentBlock'><h1 class='Titel'>Kurztitel</h1>"
+        "<p class='ErlText'>Musterschutzgesetz</p></div>"
+        "<div class='contentBlock'><h1 class='Titel'>Kundmachungsorgan</h1>"
+        "<p class='ErlText'>BGBl. Nr. 497/1990</p></div>"
+        "</div></body></html>"
+    )
+    respx.get("https://www.ris.bka.gv.at/x/y.html").mock(
+        return_value=httpx.Response(200, text=html)
+    )
+    async with RisClient(cfg) as c:
+        res = await c.get_text("https://www.ris.bka.gv.at/x/y.html")
+    assert res.citation == "Musterschutzgesetz, BGBl. Nr. 497/1990"
+
+
+@respx.mock
+async def test_get_text_passed_citation_wins(cfg):
+    html = "<html><body><div class='paperw'><div class='contentBlock'><h1 class='Titel'>Kurztitel</h1><p class='ErlText'>X</p></div></div></body></html>"
+    respx.get("https://www.ris.bka.gv.at/x/y.html").mock(
+        return_value=httpx.Response(200, text=html)
+    )
+    async with RisClient(cfg) as c:
+        res = await c.get_text(
+            "https://www.ris.bka.gv.at/x/y.html", citation="Explicit citation"
+        )
+    assert res.citation == "Explicit citation"
+
+
+async def test_get_text_rejects_unknown_kwarg(cfg):
+    # Unknown kwargs must raise loudly, not be silently swallowed.
+    async with RisClient(cfg) as c:
+        with pytest.raises(TypeError):
+            await c.get_text("https://www.ris.bka.gv.at/x/y.html", bogus="oops")

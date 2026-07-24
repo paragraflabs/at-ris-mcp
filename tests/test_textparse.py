@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from ris_client.textparse import html_to_markdown, to_markdown
+from ris_client.textparse import extract_law_citation, html_to_markdown, to_markdown
 
 FIX = Path(__file__).parent.parent / "fixtures"
 
@@ -52,3 +52,15 @@ def test_to_markdown_xml_dispatch():
     xml = "<root><Absatz>Hallo Welt</Absatz></root>"
     out = to_markdown(xml, "https://www.ris.bka.gv.at/x/y.xml")
     assert "Hallo Welt" in out
+
+
+def test_extract_law_citation_from_html(law_html):
+    cit = extract_law_citation(law_html)
+    assert cit is not None
+    assert "Abschlussprüfer-Aufsichtsgesetz" in cit
+    assert "§ 17" in cit
+    assert "BGBl. I Nr. 83/2016" in cit
+
+
+def test_extract_law_citation_none_on_empty():
+    assert extract_law_citation("<html><body></body></html>") is None
