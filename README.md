@@ -1,5 +1,7 @@
 # at-ris-mcp
 
+<!-- mcp-name: io.github.paragraflabs/at-ris-mcp -->
+
 A generic **MCP server** and standalone **Python client library** for the
 Austrian **RIS** (Rechtsinformationssystem des Bundes), the official legal
 information system of the Republic of Austria, operated by the Bundeskanzleramt.
@@ -109,13 +111,18 @@ announced to `ris.it@bka.gv.at`. A descriptive User-Agent is sent by default.
   Consolidated law and all other documents are for information only. Every
   response carries a `legal_notice` to that effect.
 
-## Scope (v0.3)
+## Scope (v1.0)
 
 Covered: `Bundesrecht` (`BrKons`, `BgblAuth`, `BgblPdf`, `BgblAlt`, `Begut`,
-`RegV`, `Erv`), `Judikatur` (all courts), the **History change-feed**
-(`ris_list_changes`, incl. deleted documents), **Landesrecht** (9 Bundesländer:
-`LrKons`, `LgblAuth`, `Lgbl`, `LgblNO`, `Vbl`), **Sonstige** (`Erlaesse`,
-`Avsv`, `Spg`, `KmGer`, …), **Bezirke** (`Bvb`) and **Gemeinden** (`Gr`, `GrA`).
+`RegV`, `Erv` — English translations), `Judikatur` (all courts), the **History
+change-feed** (`ris_list_changes`, incl. deleted documents), **Landesrecht**
+(9 Bundesländer: `LrKons`, `LgblAuth`, `Lgbl`, `LgblNO`, `Vbl`), **Sonstige**
+(`Erlaesse`, `Avsv`, `Avn`, `Spg`, `KmGer`, `Upts`, `Mrp`, `PruefGewO` — with
+app-specific fine filters), **Bezirke** (`Bvb`) and **Gemeinden** (`Gr`, `GrA`).
+
+> **English translations (`Erv`):** search via `ris_search_law` with
+> `applikation="Erv"`. `suchworte`/`titel` map to the RIS `SearchTerms`/`Title`
+> parameters automatically.
 
 > **State-law note:** for consolidated state law (`LrKons`), select the states
 > via `bundeslaender` (e.g. `["Kaernten","Tirol"]`); this maps to the dotted
@@ -134,3 +141,16 @@ pip install -e ".[dev,mcp]"
 pytest                       # offline tests
 RIS_SMOKE=1 pytest -m smoke  # live smoke tests against the real API
 ```
+
+## Release
+
+```bash
+python -m build              # builds sdist + wheel into dist/
+python -m twine check dist/* # validate metadata
+# then (maintainer, with credentials): twine upload dist/*
+```
+
+Publishing to the [MCP registry](https://github.com/modelcontextprotocol/registry)
+uses `server.json` (name `io.github.paragraflabs/at-ris-mcp`); the matching
+`mcp-name:` marker is embedded near the top of this README.
+

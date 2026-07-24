@@ -2,6 +2,9 @@
 ris_client (PLAN.md §5 - server.py enthält keine Logik).
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 import hashlib
@@ -267,6 +270,19 @@ async def ris_search_misc(
     bundesministerium: str | None = None,
     fassung_vom: str | None = None,
     geaendert_seit: str | None = None,
+    dokumentart: str | None = None,
+    urheber: str | None = None,
+    avsvnummer: str | None = None,
+    avnnummer: str | None = None,
+    spgnummer: str | None = None,
+    gericht: str | None = None,
+    partei: str | None = None,
+    gz: str | None = None,
+    einbringer: str | None = None,
+    sitzungsnummer: str | None = None,
+    gesetzgebungsperiode: str | None = None,
+    kundmachung_von: str | None = None,
+    kundmachung_bis: str | None = None,
     page_size: str = "Twenty",
     page_number: int = 1,
 ) -> dict[str, Any]:
@@ -274,7 +290,11 @@ async def ris_search_misc(
 
     applikation: Erlaesse (ministerial decrees, default) | Avsv | Avn | Spg |
     KmGer | Upts | Mrp | PruefGewO. geschaeftszahl, norm and bundesministerium
-    mainly apply to Erlaesse. Each hit carries source_url and content_urls.
+    mainly apply to Erlaesse. App-specific fine filters (only sent for the
+    relevant app): avsvnummer/dokumentart/urheber (Avsv), avnnummer (Avn),
+    spgnummer (Spg), gericht (KmGer), partei/gz (Upts),
+    einbringer/sitzungsnummer/gesetzgebungsperiode (Mrp). kundmachung_von/bis
+    are YYYY-MM-DD dates. Each hit carries source_url and content_urls.
     """
     try:
         req = MiscSearchRequest(
@@ -282,6 +302,12 @@ async def ris_search_misc(
             geschaeftszahl=geschaeftszahl, norm=norm,
             bundesministerium=bundesministerium, fassung_vom=fassung_vom,
             geaendert_seit=geaendert_seit,
+            dokumentart=dokumentart, urheber=urheber, avsvnummer=avsvnummer,
+            avnnummer=avnnummer, spgnummer=spgnummer, gericht=gericht,
+            partei=partei, gz=gz, einbringer=einbringer,
+            sitzungsnummer=sitzungsnummer,
+            gesetzgebungsperiode=gesetzgebungsperiode,
+            kundmachung_von=kundmachung_von, kundmachung_bis=kundmachung_bis,
             page_size=page_size, page_number=page_number,
         )
         async with RisClient(_config) as c:

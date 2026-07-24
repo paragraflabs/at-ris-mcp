@@ -10,6 +10,9 @@ Convenience module-level coroutines (``search_law`` etc.) create a short-lived
 client for one-off calls.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 from .client import RisClient
@@ -132,8 +135,9 @@ def list_collections() -> dict:
                 "covered": True,
                 "applikationen": [a.value for a in MiscApplikation],
                 "default": MiscApplikation.Erlaesse.value,
-                "note": "Erlässe, Avsv, Spg, KmGer, ... Generische Filter; "
-                "app-spezifische Feinfilter folgen bei Bedarf.",
+                "note": "Erlässe, Avsv, Avn, Spg, KmGer, Upts, Mrp, PruefGewO - "
+                "inkl. app-spezifischer Feinfilter (Avsvnummer, Spgnummer, "
+                "Sitzungsnummer, Gericht, Partei, ...).",
             },
             "Bezirke": {
                 "covered": True,
@@ -146,14 +150,12 @@ def list_collections() -> dict:
                 "default": MunicipalityApplikation.Gr.value,
             },
         },
-        "not_yet_covered": {
-            "Sonstige (app-spezifische Feinfilter)": "z.B. Avsvnummer, "
-            "Spgnummer, Sitzungsnummer - Roadmap v1.0",
-        },
+        "not_yet_covered": {},
         "attribution": "Quelle: RIS - Rechtsinformationssystem des Bundes "
         "(data.bka.gv.at), CC BY 4.0",
-        "dataset_note": "Bundesrecht, Landesrecht, Judikatur, Sonstige, Bezirke, "
-        "Gemeinden und der History-Änderungsfeed sind abgedeckt.",
+        "dataset_note": "Bundesrecht (inkl. Erv), Landesrecht, Judikatur, "
+        "Sonstige, Bezirke, Gemeinden und der History-Änderungsfeed sind "
+        "abgedeckt.",
     }
 
 

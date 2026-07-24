@@ -6,6 +6,9 @@ or on weekends) is surfaced as an advisory, not enforced, because interactive
 recherche is not a mass download.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 import asyncio

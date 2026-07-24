@@ -5,6 +5,9 @@ A single file, atomic, with an expiry column. Deliberately simple; FTS5
 full-text search is a v2 upgrade path.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 import sqlite3

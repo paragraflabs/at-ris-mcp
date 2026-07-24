@@ -5,6 +5,9 @@ The request models mirror the official RIS XSD request schemas
 OGD_Request_Types.xsd and must not be invented.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 from enum import Enum
@@ -286,6 +289,20 @@ class MiscSearchRequest(BaseModel):
     bundesministerium: str | None = None
     fassung_vom: str | None = None
     geaendert_seit: ChangeSetInterval | None = None
+    # App-specific fine filters (optional; only sent for the relevant app).
+    dokumentart: str | None = None          # Avsv
+    urheber: str | None = None              # Avsv
+    avsvnummer: str | None = None           # Avsv
+    avnnummer: str | None = None            # Avn
+    spgnummer: str | None = None            # Spg
+    gericht: str | None = None              # KmGer
+    partei: str | None = None               # Upts
+    gz: str | None = None                   # Upts
+    einbringer: str | None = None           # Mrp
+    sitzungsnummer: str | None = None       # Mrp
+    gesetzgebungsperiode: str | None = None  # Mrp
+    kundmachung_von: str | None = None      # -> Kundmachung(sdatum).Von
+    kundmachung_bis: str | None = None      # -> Kundmachung(sdatum).Bis
     page_size: PageSize = PageSize.Twenty.value
     page_number: int = 1
 

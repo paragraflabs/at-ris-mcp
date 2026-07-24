@@ -11,6 +11,9 @@ The envelope shape (verified against live responses, see fixtures/):
 normalised here.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 from typing import Any

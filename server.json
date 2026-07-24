@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.paragraflabs/at-ris-mcp",
+  "description": "Generic MCP server for the Austrian legal information system (RIS): consolidated federal & state law, case law, official gazettes, change-feed. Clean Markdown, ELI/ECLI citations, CC-BY.",
+  "repository": {
+    "url": "https://github.com/paragraflabs/at-ris-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "at-ris-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "RIS_CACHE_DIR",
+          "description": "Directory for the SQLite response cache (default: ~/.cache/at-ris-mcp).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RIS_AUDIT_DIR",
+          "description": "If set, append a JSONL audit line per tool call (no full text, no client data).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RIS_RATE_MS",
+          "description": "Minimum delay between requests in ms (RIS netiquette; default 1200).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

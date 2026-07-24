@@ -10,6 +10,9 @@ sees only the legal text (PLAN.md §6).
 ``raw`` returns the untouched source (court-proof original).
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 from bs4 import BeautifulSoup

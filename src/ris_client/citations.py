@@ -5,6 +5,9 @@ ELI (for legislation) and ECLI (for case law) come verbatim from RIS and are
 never invented.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 ATTRIBUTION = (

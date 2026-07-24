@@ -4,6 +4,9 @@ The MCP wrapper surfaces the ``code`` prefix so callers can iterate
 (invalid_arg, not_found, unsupported_format, upstream_error).
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 

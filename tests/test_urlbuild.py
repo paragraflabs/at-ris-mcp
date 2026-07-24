@@ -258,3 +258,58 @@ def test_municipality_gra_kundmachung():
     d = dict(p)
     assert d["Applikation"] == "GrA"
     assert d["Kundmachungsdatum.Von"] == "2023-11-01"
+
+
+# --- v1.0: Erv (English) + Sonstige fine filters --------------------------
+def test_erv_uses_english_param_names():
+    p = _build_law_params(
+        LawSearchRequest(applikation="Erv", suchworte="data",
+                         titel="Protection", kundmachungsorgan="100/2005",
+                         page_size="Ten")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Erv"
+    assert d["SearchTerms"] == "data"
+    assert d["Title"] == "Protection"
+    assert d["Source"] == "100/2005"
+    # must NOT emit the German field names for Erv
+    assert "Suchworte" not in d
+    assert "Titel" not in d
+
+
+def test_misc_avsv_fine_filters():
+    p = _build_misc_params(
+        MiscSearchRequest(applikation="Avsv", suchworte="Hauptverband",
+                         avsvnummer="85/2016", dokumentart="Richtlinien",
+                         urheber="Hauptverband",
+                         kundmachung_von="2016-01-01", kundmachung_bis="2016-06-30")
+    )
+    d = dict(p)
+    assert d["Applikation"] == "Avsv"
+    assert d["Avsvnummer"] == "85/2016"
+    assert d["Dokumentart"] == "Richtlinien"
+    assert d["Urheber"] == "Hauptverband"
+    # Avsv uses the "Kundmachung" date base, not "Kundmachungsdatum"
+    assert d["Kundmachung.Von"] == "2016-01-01"
+    assert d["Kundmachung.Bis"] == "2016-06-30"
+
+
+def test_misc_mrp_uses_sitzungsdatum():
+    p = _build_misc_params(
+        MiscSearchRequest(applikation="Mrp", suchworte="Entwicklung",
+                         sitzungsnummer="67", gesetzgebungsperiode="XXVII",
+                         kundmachung_von="2020-01-01")
+    )
+    d = dict(p)
+    assert d["Sitzungsnummer"] == "67"
+    assert d["Gesetzgebungsperiode"] == "XXVII"
+    assert d["Sitzungsdatum.Von"] == "2020-01-01"
+
+
+def test_misc_fine_filters_scoped_to_app():
+    # avsvnummer must not leak into an Erlaesse request.
+    p = _build_misc_params(
+        MiscSearchRequest(applikation="Erlaesse", suchworte="x",
+                         avsvnummer="85/2016")
+    )
+    assert "Avsvnummer" not in dict(p)

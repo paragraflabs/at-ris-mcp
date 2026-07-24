@@ -197,3 +197,13 @@ def test_map_gemeinde_has_gemeinde_and_geschaeftszahl():
     assert rec.bundesland
     assert rec.gemeinde
     assert rec.geschaeftszahl
+
+
+def test_map_erv_record():
+    env = json.loads((FIX / "erv_search.json").read_text(encoding="utf-8"))
+    _, refs = mapping.iter_references(env)
+    rec = mapping.map_law_record(refs[0])
+    assert rec.applikation == "Erv"
+    assert rec.id.startswith("ERV")
+    assert rec.titel  # e.g. "Administrative Penal Act 1991 – VStG"
+    assert rec.source_url

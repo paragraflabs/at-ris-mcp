@@ -6,6 +6,9 @@ URL construction is the crux (PLAN.md §6) and is exercised against the official
 GET examples in tests/test_urlbuild.py.
 """
 
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 at-ris-mcp contributors
+
 from __future__ import annotations
 
 import asyncio
@@ -52,6 +55,18 @@ def _build_law_params(req: LawSearchRequest) -> list[tuple[str, str]]:
     official GET examples (reference/examples_get_post.txt).
     """
     p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    # Erv (English translations) uses distinct parameter names per the XSD:
+    # SearchTerms / Title / Source instead of Suchworte / Titel.
+    if req.applikation == LawApplikation.Erv.value:
+        if req.suchworte:
+            p.append(("SearchTerms", req.suchworte))
+        if req.titel:
+            p.append(("Title", req.titel))
+        if req.kundmachungsorgan:
+            p.append(("Source", req.kundmachungsorgan))
+        p.append(("DokumenteProSeite", req.page_size))
+        p.append(("Seitennummer", str(req.page_number)))
+        return p
     if req.suchworte:
         p.append(("Suchworte", req.suchworte))
     if req.titel:
@@ -191,20 +206,58 @@ def _build_state_law_params(req: StateLawSearchRequest) -> list[tuple[str, str]]
 
 
 def _build_misc_params(req: MiscSearchRequest) -> list[tuple[str, str]]:
-    """Sonstige (Erlässe etc.)."""
-    p: list[tuple[str, str]] = [("Applikation", req.applikation)]
+    """Sonstige (Erlässe etc.). App-specific fine filters are only emitted for
+    the relevant application, per OGD_Sonstige_Request.xsd."""
+    app = req.applikation
+    p: list[tuple[str, str]] = [("Applikation", app)]
     if req.suchworte:
         p.append(("Suchworte", req.suchworte))
     if req.titel:
         p.append(("Titel", req.titel))
-    if req.geschaeftszahl:
+    # Erlaesse-oriented common filters.
+    if req.geschaeftszahl and app in ("Erlaesse", "Avn"):
         p.append(("Geschaeftszahl", req.geschaeftszahl))
-    if req.norm:
+    if req.norm and app in ("Erlaesse", "Avn", "Upts"):
         p.append(("Norm", req.norm))
-    if req.bundesministerium:
+    if req.bundesministerium and app == "Erlaesse":
         p.append(("Bundesministerium", req.bundesministerium))
-    if req.fassung_vom:
+    if req.fassung_vom and app in ("Erlaesse", "Avn", "KmGer", "PruefGewO", "Spg"):
         p.append(("FassungVom", req.fassung_vom))
+    # App-specific fine filters.
+    if req.dokumentart and app == "Avsv":
+        p.append(("Dokumentart", req.dokumentart))
+    if req.urheber and app == "Avsv":
+        p.append(("Urheber", req.urheber))
+    if req.avsvnummer and app == "Avsv":
+        p.append(("Avsvnummer", req.avsvnummer))
+    if req.avnnummer and app == "Avn":
+        p.append(("Avnnummer", req.avnnummer))
+    if req.spgnummer and app == "Spg":
+        p.append(("Spgnummer", req.spgnummer))
+    if req.gericht and app == "KmGer":
+        p.append(("Gericht", req.gericht))
+    if req.partei and app == "Upts":
+        p.append(("Partei", req.partei))
+    if req.gz and app == "Upts":
+        p.append(("GZ", req.gz))
+    if req.einbringer and app == "Mrp":
+        p.append(("Einbringer", req.einbringer))
+    if req.sitzungsnummer and app == "Mrp":
+        p.append(("Sitzungsnummer", req.sitzungsnummer))
+    if req.gesetzgebungsperiode and app == "Mrp":
+        p.append(("Gesetzgebungsperiode", req.gesetzgebungsperiode))
+    # Date-interval filters use different field names per app.
+    if req.kundmachung_von or req.kundmachung_bis:
+        if app in ("Avsv", "Avn"):
+            base = "Kundmachung"
+        elif app == "Mrp":
+            base = "Sitzungsdatum"
+        else:  # Spg, KmGer, PruefGewO, Erlaesse
+            base = "Kundmachungsdatum"
+        if req.kundmachung_von:
+            p.append((f"{base}.Von", req.kundmachung_von))
+        if req.kundmachung_bis:
+            p.append((f"{base}.Bis", req.kundmachung_bis))
     if req.geaendert_seit:
         p.append(("ImRisSeit", req.geaendert_seit))
     p.append(("DokumenteProSeite", req.page_size))
@@ -462,10 +515,15 @@ class RisClient:
 
     async def search_misc(self, req: MiscSearchRequest) -> SearchResult:
         if not (req.suchworte or req.titel or req.geschaeftszahl
-                or req.norm or req.geaendert_seit or req.fassung_vom):
+                or req.norm or req.geaendert_seit or req.fassung_vom
+                or req.avsvnummer or req.avnnummer or req.spgnummer
+                or req.dokumentart or req.urheber or req.gericht or req.partei
+                or req.gz or req.einbringer or req.sitzungsnummer
+                or req.kundmachung_von):
             raise InvalidArgError(
-                "Provide at least one filter (suchworte, titel, geschaeftszahl, "
-                "norm, fassung_vom or geaendert_seit)."
+                "Provide at least one filter (e.g. suchworte, titel, "
+                "geschaeftszahl, norm, fassung_vom, geaendert_seit, or an "
+                "app-specific number/date filter)."
             )
         return await self._law_search("Sonstige",
                                       _build_misc_params(req), req.page_number)
