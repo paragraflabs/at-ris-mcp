@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+dist
+build
+*.egg-info
+__pycache__
+.pytest_cache
+.ruff_cache
+.mypy_cache
+fixtures
+reference
+tests
+*.sqlite
+*.sqlite3
+*.jsonl

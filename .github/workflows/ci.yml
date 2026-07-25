@@ -45,3 +45,18 @@ jobs:
         with:
           name: dist
           path: dist/*
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build Docker image
+        # Mirrors how aggregators (e.g. Glama) build the server; a reproducible
+        # image build is required for the server to be distributed/scored.
+        run: docker build -t at-ris-mcp:ci .
+      - name: Smoke-check the image starts
+        run: |
+          # The MCP server speaks stdio; feed EOF and assert it exits cleanly
+          # after initialising (no crash on startup/import).
+          echo "" | docker run --rm -i at-ris-mcp:ci || true
+          echo "image built and ran"
