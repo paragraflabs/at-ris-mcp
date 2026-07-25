@@ -4,6 +4,13 @@ All notable changes to **at-ris-mcp** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.2] - 2026-07-25
+
+### Changed
+- Discoverability: keyword-optimized the PyPI summary and the MCP-registry
+  description; added a `title` and `websiteUrl` to `server.json` so the server
+  surfaces for searches like "Austria", "law" and "RIS".
+
 ## [1.0.1] - 2026-07-24
 
 ### Added

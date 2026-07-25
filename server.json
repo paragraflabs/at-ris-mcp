@@ -1,17 +1,19 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.paragraflabs/at-ris-mcp",
-  "description": "Generic MCP server for Austrian federal & state law, case law, gazettes and change monitoring.",
+  "title": "Austrian Law (RIS) \u2014 Bundesrecht, Landesrecht & Judikatur",
+  "description": "Austria RIS: federal & state law, case law, gazettes, change monitoring (Bundesrecht, Judikatur).",
+  "websiteUrl": "https://github.com/paragraflabs/at-ris-mcp",
   "repository": {
     "url": "https://github.com/paragraflabs/at-ris-mcp",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "at-ris-mcp",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "transport": {
         "type": "stdio"
       },
