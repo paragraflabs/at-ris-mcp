@@ -99,7 +99,7 @@ from .models import NormabschnittTyp  # noqa: E402  (kept in __all__)
 
 
 def list_collections() -> dict:
-    """Static overview of the RIS scope covered by this server (PLAN.md §4)."""
+    """Static overview of the RIS scope covered by this server."""
     return {
         "version": __version__,
         "base_url": Config.from_env().base_url,

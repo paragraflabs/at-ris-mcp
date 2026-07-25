@@ -5,7 +5,7 @@ RIS documents wrap the content in ``<div class="paperw">`` with many
 (``h1.Titel``) plus paragraphs (``p.ErlText`` / ``p.Abs`` ...). The markup is
 polluted with ~40 KB of CSS and duplicate accessibility spans
 (``span.sr-only`` mirrors ``span[aria-hidden]``); both are stripped so the LLM
-sees only the legal text (PLAN.md §6).
+sees only the legal text.
 
 ``raw`` returns the untouched source (court-proof original).
 """

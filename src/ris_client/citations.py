@@ -1,6 +1,6 @@
 """Citation contract: attribution, legal notice and human-readable citations.
 
-Per PLAN.md §2 every response carries a CC-BY attribution and a legal notice.
+Per design, every response carries a CC-BY attribution and a legal notice.
 ELI (for legislation) and ECLI (for case law) come verbatim from RIS and are
 never invented.
 """

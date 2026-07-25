@@ -50,9 +50,9 @@ Changelog = "https://github.com/paragraflabs/at-ris-mcp/blob/main/CHANGELOG.md"
 packages = ["src/ris_client", "src/ris_mcp"]
 
 [tool.hatch.build.targets.sdist]
-# Deliberately excludes PLAN.md (internal implementation plan / business
-# context) and the test-only fixtures/ + reference/ directories, so the public
-# sdist ships only the library, its tests and the standard project docs.
+# The published sdist ships only the library, its tests and the standard
+# project docs; the test-only fixtures/ + reference/ directories are kept in
+# the git repository (for contributors) but excluded from the package.
 include = ["src", "tests", "README.md", "LICENSE", "NOTICE", "CHANGELOG.md"]
 
 [tool.pytest.ini_options]

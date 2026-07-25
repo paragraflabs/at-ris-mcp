@@ -1,4 +1,4 @@
-"""SQLite-backed response cache with TTL (PLAN.md §8a).
+"""SQLite-backed response cache with TTL.
 
 Reduces load on the RIS API (netiquette) and speeds up repeated recherche.
 A single file, atomic, with an expiry column. Deliberately simple; FTS5

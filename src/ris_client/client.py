@@ -2,7 +2,7 @@
 caching and full-text retrieval.
 
 This is the standalone, MCP-independent library entry point. The dot-notation
-URL construction is the crux (PLAN.md §6) and is exercised against the official
+URL construction is the crux and is exercised against the official
 GET examples in tests/test_urlbuild.py.
 """
 

@@ -1,5 +1,5 @@
 """FastMCP server exposing RIS via 6 tools. Thin wrapper: all logic lives in
-ris_client (PLAN.md §5 - server.py enthält keine Logik).
+ris_client.
 """
 
 # SPDX-License-Identifier: Apache-2.0
@@ -36,7 +36,7 @@ _config = Config.from_env()
 
 
 # ---------------------------------------------------------------------------
-# Audit log (opt-in via RIS_AUDIT_DIR; PLAN.md §8a) - never logs full text.
+# Audit log (opt-in via RIS_AUDIT_DIR; ) - never logs full text.
 # ---------------------------------------------------------------------------
 def _audit(tool: str, params: dict[str, Any], total: int | None) -> None:
     if _config.audit_dir is None:

@@ -2,13 +2,20 @@
 
 <!-- mcp-name: io.github.paragraflabs/at-ris-mcp -->
 
+[![CI](https://github.com/paragraflabs/at-ris-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paragraflabs/at-ris-mcp/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/at-ris-mcp.svg)](https://pypi.org/project/at-ris-mcp/)
+[![Python](https://img.shields.io/pypi/pyversions/at-ris-mcp.svg)](https://pypi.org/project/at-ris-mcp/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 A generic **MCP server** and standalone **Python client library** for the
 Austrian **RIS** (Rechtsinformationssystem des Bundes), the official legal
 information system of the Republic of Austria, operated by the Bundeskanzleramt.
 
 It covers **federal law** (Bundesrecht — including *consolidated* law `BrKons`,
-the official gazettes, drafts and government bills) and **case law**
-(Judikatur — OGH, VfGH, VwGH, BVwG, LVwG and more) via the keyless OGD API at
+the official gazettes, drafts and government bills), **state law** (Landesrecht
+of the nine Bundesländer), **case law** (Judikatur — OGH, VfGH, VwGH, BVwG,
+LVwG and more), ministerial decrees, district and municipal law, plus a
+change-monitoring feed — via the keyless OGD API at
 `https://data.bka.gv.at/ris/api/v2.6/`.
 
 ## Why this exists
@@ -27,7 +34,7 @@ Compared with existing RIS tooling, `at-ris-mcp` adds:
 ## Two packages, one repo
 
 - **`ris_client`** — a standalone, MCP-independent library. Import it directly.
-- **`ris_mcp`** — a thin FastMCP/stdio wrapper exposing 6 tools. Contains no
+- **`ris_mcp`** — a thin FastMCP/stdio wrapper exposing 10 tools. Contains no
   logic of its own.
 
 ## Install
@@ -144,13 +151,34 @@ RIS_SMOKE=1 pytest -m smoke  # live smoke tests against the real API
 
 ## Release
 
+Releases are automated. Pushing a version tag (`vX.Y.Z`) triggers GitHub
+Actions to build the distributions, publish to **PyPI** (via Trusted
+Publishing / OIDC — no API token), create a **GitHub Release**, and register
+the new version in the **MCP Registry**.
+
 ```bash
-python -m build              # builds sdist + wheel into dist/
-python -m twine check dist/* # validate metadata
-# then (maintainer, with credentials): twine upload dist/*
+# bump the version in pyproject.toml, src/ris_client/config.py and server.json,
+# update CHANGELOG.md, then:
+git tag -a vX.Y.Z -m "vX.Y.Z"
+git push origin vX.Y.Z
 ```
 
-Publishing to the [MCP registry](https://github.com/modelcontextprotocol/registry)
-uses `server.json` (name `io.github.paragraflabs/at-ris-mcp`); the matching
-`mcp-name:` marker is embedded near the top of this README.
+To build locally without publishing:
+
+```bash
+python -m build              # sdist + wheel into dist/
+python -m twine check dist/*
+```
+
+The MCP-registry entry is described by `server.json`
+(name `io.github.paragraflabs/at-ris-mcp`); the matching `mcp-name:` marker is
+embedded near the top of this README.
+
+## Contributing & support
+
+Issues and pull requests are welcome at
+<https://github.com/paragraflabs/at-ris-mcp>. See [`CHANGELOG.md`](CHANGELOG.md)
+for the release history. This project is not affiliated with or endorsed by the
+Republic of Austria or the Bundeskanzleramt; it is an independent client for the
+public RIS OGD interface.
 

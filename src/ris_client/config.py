@@ -2,7 +2,7 @@
 
 All values are overridable via environment variables so the client can be
 retargeted (e.g. a new API version) without code changes, as required by
-PLAN.md §6 ("API-Version 2.6 kann sich ändern").
+the design notes ("API-Version 2.6 kann sich ändern").
 """
 
 # SPDX-License-Identifier: Apache-2.0
@@ -20,7 +20,7 @@ DEFAULT_BASE_URL = "https://data.bka.gv.at/ris/api/v2.6"
 # The OGD SOAP endpoint (used for the History/Änderungen query, which is not
 # available via the REST GET API). Derived from the same host + version.
 DEFAULT_SOAP_URL = "https://data.bka.gv.at/ris/ogd/v2.6/"
-# Hosts we are allowed to fetch full text from (PLAN.md §5 host restriction).
+# Hosts we are allowed to fetch full text from.
 ALLOWED_TEXT_HOSTS = ("www.ris.bka.gv.at", "ris.bka.gv.at", "data.bka.gv.at")
 
 # A descriptive, non-browser User-Agent as demanded by RIS netiquette
@@ -63,7 +63,7 @@ class Config:
     cache_ttl_search_s: int = 7 * 24 * 3600  # consolidated law/case law: rarely changes
     cache_ttl_text_s: int = 30 * 24 * 3600
 
-    # Audit log (opt-in, off by default; PLAN.md §8a).
+    # Audit log (opt-in, off by default; ).
     audit_dir: Path | None = None
 
     @classmethod
