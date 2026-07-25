@@ -1,0 +1,10 @@
+# GitHub Linguist overrides: report the repository as the Python project it is.
+# The large HTML/XML test fixtures and the official RIS reference schemas would
+# otherwise dominate the language stats and mislabel the repo as "HTML".
+
+fixtures/**    linguist-vendored
+reference/**   linguist-documentation
+
+# Keep the fixtures diff-friendly but out of language detection.
+*.html         linguist-detectable=false
+*.xml          linguist-detectable=false
