@@ -28,4 +28,9 @@ USER appuser
 # run with an HTTP transport, e.g.:
 #   docker run -e RIS_MCP_TRANSPORT=http -e RIS_MCP_HOST=0.0.0.0 -p 8000:8000 at-ris-mcp
 EXPOSE 8000
+
+# ENTRYPOINT + default CMD. The CMD supplies the default transport argument so
+# tooling that builds and runs the image (e.g. Glama) has an explicit command;
+# override it to switch transports, e.g. `--transport http`.
 ENTRYPOINT ["at-ris-mcp"]
+CMD ["--transport", "stdio"]
