@@ -369,3 +369,26 @@ def test_state_law_fine_filters_scoped_to_app():
     assert "Einbringer" not in d
     assert "Gliederungszahl" not in d
     assert "Lgblnummer" not in d
+
+
+# --- v1.1: transport selection (entrypoint) -------------------------------
+def test_entrypoint_defaults_to_stdio():
+    from ris_mcp.__main__ import _parse_args
+    assert _parse_args([]).transport == "stdio"
+
+
+def test_entrypoint_http_flags():
+    from ris_mcp.__main__ import _parse_args
+    ns = _parse_args(["--transport", "http", "--host", "0.0.0.0", "--port", "8123"])
+    assert ns.transport == "http"
+    assert ns.host == "0.0.0.0"
+    assert ns.port == 8123
+
+
+def test_entrypoint_transport_from_env(monkeypatch):
+    from ris_mcp.__main__ import _parse_args
+    monkeypatch.setenv("RIS_MCP_TRANSPORT", "sse")
+    monkeypatch.setenv("RIS_MCP_PORT", "9000")
+    ns = _parse_args([])
+    assert ns.transport == "sse"
+    assert ns.port == 9000

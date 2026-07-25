@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "at-ris-mcp"
-version = "1.0.2"
+version = "1.1.0"
 description = "Austria RIS MCP server & Python client: federal & state law, case law, gazettes, change monitoring (Bundesrecht, Landesrecht, Judikatur)."
 readme = "README.md"
 requires-python = ">=3.11"

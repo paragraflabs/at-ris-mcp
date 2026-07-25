@@ -4,6 +4,19 @@ All notable changes to **at-ris-mcp** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-25
+
+### Added
+- **HTTP / SSE transport** for remote/hosted deployments. The server still
+  defaults to stdio; select a remote transport via `--transport http|sse|
+  streamable-http` (with `--host`/`--port`/`--path`) or the `RIS_MCP_TRANSPORT`,
+  `RIS_MCP_HOST`, `RIS_MCP_PORT`, `RIS_MCP_PATH` environment variables. The
+  Dockerfile documents the HTTP run and exposes port 8000.
+
+### Changed
+- GitHub language detection fixed via `.gitattributes` (fixtures/reference
+  marked as vendored/documentation) so the repo is reported as Python.
+
 ## [1.0.2] - 2026-07-25
 
 ### Changed

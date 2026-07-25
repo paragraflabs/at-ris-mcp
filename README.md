@@ -52,6 +52,21 @@ at-ris-mcp
 python -m ris_mcp
 ```
 
+### Remote transport (HTTP / SSE)
+
+For hosted or remote deployments the server can also speak streamable HTTP or
+SSE instead of stdio:
+
+```bash
+at-ris-mcp --transport http --host 0.0.0.0 --port 8000   # streamable HTTP
+at-ris-mcp --transport sse  --port 9000                  # SSE
+# or via environment:
+RIS_MCP_TRANSPORT=http RIS_MCP_PORT=8000 at-ris-mcp
+```
+
+The HTTP endpoint is served at `/mcp` by default (override with `--path` /
+`RIS_MCP_PATH`). stdio remains the default when no transport is given.
+
 ### Tools
 
 | Tool | Purpose |
@@ -98,6 +113,10 @@ asyncio.run(main())
 | `RIS_CACHE_DIR` | `~/.cache/at-ris-mcp` | SQLite cache location. |
 | `RIS_CACHE_ENABLED` | `true` | Toggle the cache. |
 | `RIS_AUDIT_DIR` | *(unset)* | If set, append a JSONL audit line per call (no full text, no client data). |
+| `RIS_MCP_TRANSPORT` | `stdio` | Server transport: `stdio` \| `http` \| `sse` \| `streamable-http`. |
+| `RIS_MCP_HOST` | `127.0.0.1` | Bind host for http/sse. |
+| `RIS_MCP_PORT` | `8000` | Bind port for http/sse. |
+| `RIS_MCP_PATH` | *(transport default)* | URL path for the HTTP endpoint. |
 
 ## Netiquette & rate limiting
 

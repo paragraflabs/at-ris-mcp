@@ -8,12 +8,12 @@
     "url": "https://github.com/paragraflabs/at-ris-mcp",
     "source": "github"
   },
-  "version": "1.0.2",
+  "version": "1.1.0",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "at-ris-mcp",
-      "version": "1.0.2",
+      "version": "1.1.0",
       "transport": {
         "type": "stdio"
       },

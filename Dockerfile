@@ -24,5 +24,8 @@ RUN pip install ".[mcp]"
 RUN useradd --create-home --uid 10001 appuser
 USER appuser
 
-# The server speaks MCP over stdio.
+# The server speaks MCP over stdio by default. For a hosted/remote deployment,
+# run with an HTTP transport, e.g.:
+#   docker run -e RIS_MCP_TRANSPORT=http -e RIS_MCP_HOST=0.0.0.0 -p 8000:8000 at-ris-mcp
+EXPOSE 8000
 ENTRYPOINT ["at-ris-mcp"]
